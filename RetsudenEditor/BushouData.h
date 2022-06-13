@@ -199,7 +199,7 @@ public:
 		int ivBufDecodedDataSize = vBufBushouDecodedData.size();
 
 		// 2番目～15番目が武将列伝 注意!!
-		for ( int ifile = 2; ifile <= (int)ivBufDecodedDataSize && ifile <= 15 ; ifile++ ) {
+		for ( int ifile = 2;  ifile <= 15 && ifile <= (int)ivBufDecodedDataSize ; ifile++ ) {
 
 			// ちょうど vSplittedData[0]=１番目の要素のデータ列、vSplittedData[1]=２番目の要素のデータ列、みたいな感じ
 			vector<vector<byte>> vSplittedData;
@@ -321,15 +321,34 @@ public:
 	}
 
 	BOOL AllSaveToBFileN6P() {
-		// １番目のデータだけは残す
-		vector<byte> vFirstData = vBufBushouDecodedData[0];
-		vBufBushouDecodedData.clear(); // 一端全消去
-		vBufBushouDecodedData.push_back( vFirstData ); // FirstDataをセッティングし直し
+
+		// 武将列伝の長さを満たしていなければ、ダメ
+		if (vBufBushouDecodedData.size() < 15) {
+			return FALSE;
+		}
+
+		// 武将列伝が入っている所をクリア。
+		vBufBushouDecodedData[2].clear();
+		vBufBushouDecodedData[3].clear();
+		vBufBushouDecodedData[4].clear();
+		vBufBushouDecodedData[5].clear();
+		vBufBushouDecodedData[6].clear();
+		vBufBushouDecodedData[7].clear();
+		vBufBushouDecodedData[8].clear();
+		vBufBushouDecodedData[9].clear();
+		vBufBushouDecodedData[10].clear();
+		vBufBushouDecodedData[11].clear();
+		vBufBushouDecodedData[12].clear();
+		vBufBushouDecodedData[13].clear();
+		vBufBushouDecodedData[14].clear();
+		vBufBushouDecodedData[15].clear();
+
+		int iFileCnt = 14; // 仮想ファイル(メモリ上)を作るカウント数。１つあたり50個なので。
 
 		// それぞれの武将番号の開始番号を送りながら、仮想ファイルファイル分繰り返す。vBufBushouDecodedData に付け加えられてゆく。
 		// 2番目～15番目が武将列伝 注意!!
-		for ( int f=2; f<=15; f++) {
-			MakeSplittedDataToJoindData( f*50 );
+		for (int f = 0; f < iFileCnt; f++) {
+			MakeSplittedDataToJoindData( f*50, 2+f );
 		}
 
 		// メモリ→パック化イメージ
@@ -345,7 +364,7 @@ public:
 	}
 
 	// １つの仮想ファイル(分割されたもの相当)をメモリ上に作り出す。
-	void MakeSplittedDataToJoindData(int iStartIndex) {
+	void MakeSplittedDataToJoindData(int iStartIndex, int iAssingIndex) {
 		vector<vector<byte>> vSplittedData; // 50 二人分足し込んでゆくデータ
 		vector<byte> vDstJoinedData; // 50 二人分足し込んでゆくデータ
 
@@ -359,7 +378,7 @@ public:
 		ls11_JoinData(vSplittedData, &vDstJoinedData);
 
 		// それを全体データに加える。
-		vBufBushouDecodedData.push_back( vDstJoinedData );
+		vBufBushouDecodedData[iAssingIndex] = vDstJoinedData;
 	}
 
 	// とある１人分の武将の名前生年系のデータ
