@@ -96,10 +96,6 @@ public:
 		Matches matches;
 		if ( OnigMatch(line, "^(.*?) \x1b\x6b(.*?)\x1b\x48 (.*?)\x05\x05\x05$", &matches) ) {
 
-			// ’·‘]‰ä•”‚Æ@‰ä•”‚Ì“Á•Êˆ—
-			matches[1] = StrReplace(matches[1], "\xEC\x8C\xEC\x8D\xEC\x8E", "’·@‰ä•”" );
-			matches[1] = StrReplace(matches[1], "\xEC\x8F\xEC\x8D\xEC\x8E", "@‰ä•”" );
-
 			// ”¼ŠpË‘SŠp
 			char szBufZenKatakana[256] = "";
 			hankana2zenkana((unsigned char *)matches[1].c_str(), (unsigned char *)szBufZenKatakana);
@@ -121,9 +117,6 @@ public:
 		string line = string(pUnmanagedLine);
 		Matches matches;
 		if ( OnigMatch(line, "^(.*?) \x1b\x6b(.*?)\x1b\x48 (.*?)\x05\x05\x05(.*?)\x05\x05\x05$", &matches) ) {
-			// ’·‘]‰ä•”‚Æ@‰ä•”‚Ì“Á•Êˆ—
-			matches[1] = StrReplace(matches[1], "\xEC\x8C\xEC\x8D\xEC\x8E", "’·@‰ä•”" );
-			matches[1] = StrReplace(matches[1], "\xEC\x8F\xEC\x8D\xEC\x8E", "@‰ä•”" );
 
 			// ‘I‘ğ‚µ‚Ä‚¢‚é‚Æ‚±‚ë‚Éã‘‚«
 			String^ strFullName = gcnew String(matches[1].c_str());

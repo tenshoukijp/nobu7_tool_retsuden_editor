@@ -287,7 +287,7 @@ public:
 
 
 
-	// bfile.n6p→配列へと格納。
+	// message.nb7→配列へと格納。
 	int CastleData_Import() {
 		if (! System::IO::File::Exists( gcnew String(szCastleTargetFileName) ) ) {
 			System::Windows::Forms::MessageBox::Show(gcnew String(szCastleTargetFileName)+"を読み込めません", "エラー", MessageBoxButtons::OK, ::MessageBoxIcon::Error);
@@ -429,46 +429,46 @@ public:
 	// とある１人分の城の名前生年系のデータ
 	vector<byte> GetNameLineData(int iTargetIndex) {
 
-		std::string unmanagedData = "";
-		int packcnt = vCastleInfoListData[iTargetIndex].size();
+		String^ format = String::Format("{0}\x81\x40\x1b\x6b{1}\x05\x05\x05", lstStrFullName[iTargetIndex], lstStrRubyYomi[iTargetIndex]);
 
-		// パックされている分、全部足しこむ
-		for ( int j=0; j <packcnt; j++ ) {
-			unmanagedData = 
-				string("") + vCastleInfoListData[iTargetIndex][j].binAppearanceScenario +
-				vCastleInfoListData[iTargetIndex][j].szFullName + "\x20\x1b\x6b" +
-				vCastleInfoListData[iTargetIndex][j].szRubyYomi + "\x05\x05\x05" +
-				unmanagedData;
-		}
+		std::string unmanagedData = GetOutputFormatNormalizeData(format);
 
-		char *psz = (char *)unmanagedData.c_str();
+		char* psz = (char*)unmanagedData.c_str();
 
 		// 一気にchar[]→vector<byte>へとコピー
-		vector<byte> line( &psz[0], &psz[strlen(psz)] );
+		vector<byte> line(&psz[0], &psz[strlen(psz)]);
 
 		return line;
 	}
 
 	// とある1人分の城の列伝データ
 	vector<byte> GetRetsudenLineData(int iTargetIndex) {
-		std::string unmanagedData = "";
-		int packcnt = vCastleRetsudenInfoListData[iTargetIndex].size();
+		String^ format = String::Format("{0}\x05\x05\x05", lstStrRetsuden[iTargetIndex]);
 
-		// パックされている分、全部足しこむ
-		for ( int j=0; j <packcnt; j++ ) {
-			unmanagedData = 
-				string("") + vCastleInfoListData[iTargetIndex][j].binAppearanceScenario +
-				GetOutputFormatNormalizeData( vCastleRetsudenInfoListData[iTargetIndex][j].szRetsuden ) + "\x05\x05\x05" +
-				unmanagedData;
-		}
+		std::string unmanagedData = GetOutputFormatNormalizeData(format);
 
-		char *psz = (char *)unmanagedData.c_str();
+		char* psz = (char*)unmanagedData.c_str();
 
 		// 一気にchar[]→vector<byte>へとコピー
-		vector<byte> line( &psz[0], &psz[strlen(psz)] );
+		vector<byte> line(&psz[0], &psz[strlen(psz)]);
 
 		return line;
+	}
 
+	std::string GetOutputFormatNormalizeData(String^ managedData) {
+		// .NETタイプのString^ → マルチバイトのC++型std::stringへ
+		std::string unmanagedData = DotNetStringToMultiByte(managedData);
+
+		Matches matches;
+		// 特殊な記号を、列伝エディタ上での見た目の改行へと変換。
+		for (int i = 0; OnigMatch(unmanagedData, "^(.*?)\r\n(.+)", &matches) && i < (int)unmanagedData.size(); i++) {
+			// 列伝から要素を抽出する。
+			if (!matches[1].empty()) {
+				unmanagedData = matches[1] + "\x0A" + matches[2];
+			}
+		}
+
+		return unmanagedData;
 	}
 
 };

@@ -95,14 +95,14 @@ public:
 	void NameAssignManagedData(char *pUnmanagedLine) {
 		string line = string(pUnmanagedLine);
 		Matches matches;
-		if ( OnigMatch(line, "^\x1b\x6b(.*?)\x1b\x48\n?(.*?)\x05\x05\x05$", &matches) ) {
+		if ( OnigMatch(line, "^(.+?)\x81\x40\x1b\x6b(.+?)\x05\x05\x05$", &matches) ) {
 
-			matches[2] = HankakuKatakanaToZentakuKatakana(matches[2]);
+			matches[1] = HankakuKatakanaToZentakuKatakana(matches[1]);
 
-			String^ strFullName = gcnew String(matches[2].c_str());
+			String^ strFullName = gcnew String(matches[1].c_str());
 			lstStrFullName->Add( strFullName );
 
-			String^ strRubyYomi = gcnew String(matches[1].c_str());
+			String^ strRubyYomi = gcnew String(matches[2].c_str());
 			lstStrRubyYomi->Add( strRubyYomi );
 
 			// ダミー。他とコンポーネントの数を合わせるためだけのため
@@ -114,15 +114,15 @@ public:
 	BOOL NameOverrideManagedData(char *pUnmanagedLine, int iSelectedIndex) {
 		string line = string(pUnmanagedLine);
 		Matches matches;
-		if ( OnigMatch(line, "^\x1b\x6b(.*?)\x1b\x48(.*?)\x05\x05\x05$", &matches) ) {
+		if ( OnigMatch(line, "^(.+?)\x81\x40\x1b\x6b(.+?)\x05\x05\x05$", &matches) ) {
 
-			matches[2] = HankakuKatakanaToZentakuKatakana(matches[2]);
+			matches[1] = HankakuKatakanaToZentakuKatakana(matches[1]);
 
 			// 選択しているところに上書き
-			String^ strFullName = gcnew String(matches[2].c_str());
+			String^ strFullName = gcnew String(matches[1].c_str());
 			lstStrFullName[iSelectedIndex] = strFullName;
 
-			String^ strRubyYomi = gcnew String(matches[1].c_str());
+			String^ strRubyYomi = gcnew String(matches[2].c_str());
 			lstStrRubyYomi[iSelectedIndex] = strRubyYomi;
 
 			lstStrBornEtc->Add( gcnew String("") );
@@ -175,7 +175,7 @@ public:
 
 
 
-	// bfile.n6p→配列へと格納。
+	// message.nb7→配列へと格納。
 	int KahouData_Import() {
 		if (! System::IO::File::Exists( gcnew String(szKahouTargetFileName) ) ) {
 			System::Windows::Forms::MessageBox::Show(gcnew String(szKahouTargetFileName)+"を読み込めません", "エラー", MessageBoxButtons::OK, ::MessageBoxIcon::Error);
@@ -190,7 +190,7 @@ public:
 		int ivBufDecodedDataSize = vBufKahouDecodedData.size();
 
 		// 1番目からスタートしている!! 注意!!
-		for ( int ifile = 15; ifile <= 17 && ifile < (int)ivBufDecodedDataSize ; ifile++ ) {
+		for ( int ifile = 32; ifile <= 35 && ifile < (int)ivBufDecodedDataSize ; ifile++ ) {
 
 			// ちょうど vSplittedData[0]=１番目の要素のデータ列、vSplittedData[1]=２番目の要素のデータ列、みたいな感じ
 			vector<vector<byte>> vSplittedData;
@@ -250,7 +250,7 @@ public:
 
 	// とある１人の家宝データの出力用バイナリデータを得る
 	std::string GetOneKahouExportData(int iSelectedIndex) {
-		String^ managedData = String::Format("\x1b\x6b{0}\x1b\x48\x0A{1}\x05\x05\x05{2}", lstStrRubyYomi[iSelectedIndex], lstStrFullName[iSelectedIndex], lstStrRetsuden[iSelectedIndex] );
+		String^ managedData = String::Format("{0}\x81\x40\x1b\x6b{1}\x05\x05\x05{2}", lstStrFullName[iSelectedIndex], lstStrRubyYomi[iSelectedIndex], lstStrRetsuden[iSelectedIndex] );
 
 		return GetOutputFormatNormalizeData(managedData);
 
@@ -313,20 +313,21 @@ public:
 
 	BOOL AllSaveToMessageN6P() {
 		// 家宝列伝の長さを満たしていなければ、ダメ
-		if ( vBufKahouDecodedData.size() < 17 ) {
+		if ( vBufKahouDecodedData.size() < 33 ) {
 			return FALSE;
 		}
 		// 家宝列伝が入っている３つの所をクリア。
-		vBufKahouDecodedData[15].clear(); 
-		vBufKahouDecodedData[16].clear(); 
-		vBufKahouDecodedData[17].clear(); 
+		vBufKahouDecodedData[32].clear(); 
+		vBufKahouDecodedData[33].clear(); 
+		vBufKahouDecodedData[34].clear(); 
+		vBufKahouDecodedData[35].clear();
 
 		// 家宝列伝全てについて･･･
-		int iFileCnt = 3; // 仮想ファイル(メモリ上)を作るカウント数。１つあたり50個なので。
+		int iFileCnt = 4; // 仮想ファイル(メモリ上)を作るカウント数。１つあたり50個なので。
 
 		// それぞれの家宝番号の開始番号を送りながら、仮想ファイルファイル分繰り返す。vBufKahouDecodedData に付け加えられてゆく。
 		for ( int f=0; f<iFileCnt; f++) {
-			MakeSplittedDataToJoindData( f*50, 15+f );
+			MakeSplittedDataToJoindData( f*50, 32+f );
 		}
 
 		// メモリ→パック化イメージ
@@ -362,7 +363,7 @@ public:
 	// とある１人分の家宝の名前生年系のデータ
 	vector<byte> GetNameLineData(int iTargetIndex) {
 
-		String^ format = String::Format("\x1b\x6b{0}\x1b\x48\x0A{1}\x05\x05\x05", lstStrRubyYomi[iTargetIndex], lstStrFullName[iTargetIndex]);
+		String^ format = String::Format("{0}\x81\x40\x1b\x6b{1}\x05\x05\x05", lstStrFullName[iTargetIndex], lstStrRubyYomi[iTargetIndex]);
 
 		std::string unmanagedData = GetOutputFormatNormalizeData(format);
 
