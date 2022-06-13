@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="アプリ本体">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="リソース">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="ライブラリ">
+      <UniqueIdentifier>{f3d1af77-1abd-4c0b-b085-d698ce224b6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ライブラリ\LS11Mod DotNet">
+      <UniqueIdentifier>{226a2eaa-2453-4130-807e-e0b807136d57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ライブラリ\LS11Mod Native">
+      <UniqueIdentifier>{bd6499d1-5e7c-43d5-b9ea-e343b73a9e22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ライブラリ\半角⇔全角変換">
+      <UniqueIdentifier>{5f54aeee-583c-4dc4-8a56-07e2ea6a0a06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ライブラリ\鬼車">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="ライブラリ\鬼車\Lib">
+      <UniqueIdentifier>{bdba0ebd-5b8a-47d1-adb2-8d5fa860581d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ライブラリ\デバッグ">
+      <UniqueIdentifier>{48480ba8-f123-4c22-9062-0a0bbc40f1fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ライブラリ\マネージ文字列⇒アンマネージ文字列">
+      <UniqueIdentifier>{b7bb7233-59bb-41d2-965f-76788a94cec9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BushouData.h">
+      <Filter>アプリ本体</Filter>
+    </ClInclude>
+    <ClInclude Include="CastleData.h">
+      <Filter>アプリ本体</Filter>
+    </ClInclude>
+    <ClInclude Include="KahouData.h">
+      <Filter>アプリ本体</Filter>
+    </ClInclude>
+    <ClInclude Include="RetsudenEditorForm.h">
+      <Filter>アプリ本体</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>リソース</Filter>
+    </ClInclude>
+    <ClInclude Include="LS11DotNet.h">
+      <Filter>ライブラリ\LS11Mod DotNet</Filter>
+    </ClInclude>
+    <ClInclude Include="Native\ls11_lib.h">
+      <Filter>ライブラリ\LS11Mod Native</Filter>
+    </ClInclude>
+    <ClInclude Include="Native\ls11_mod.h">
+      <Filter>ライブラリ\LS11Mod Native</Filter>
+    </ClInclude>
+    <ClInclude Include="CnvHankakuZenkaku.h">
+      <Filter>ライブラリ\半角⇔全角変換</Filter>
+    </ClInclude>
+    <ClInclude Include="OnigRegex.h">
+      <Filter>ライブラリ\鬼車</Filter>
+    </ClInclude>
+    <ClInclude Include="oniguruma\onigconfig.h">
+      <Filter>ライブラリ\鬼車\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="oniguruma\oniggnu.h">
+      <Filter>ライブラリ\鬼車\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="oniguruma\onigposix.h">
+      <Filter>ライブラリ\鬼車\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="oniguruma\oniguruma.h">
+      <Filter>ライブラリ\鬼車\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="oniguruma\regenc.h">
+      <Filter>ライブラリ\鬼車\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="oniguruma\regint.h">
+      <Filter>ライブラリ\鬼車\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="oniguruma\regparse.h">
+      <Filter>ライブラリ\鬼車\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="oniguruma\st.h">
+      <Filter>ライブラリ\鬼車\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputDebugStream.h">
+      <Filter>ライブラリ\デバッグ</Filter>
+    </ClInclude>
+    <ClInclude Include="DotNetTestToMultiByte.h">
+      <Filter>ライブラリ\マネージ文字列⇒アンマネージ文字列</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>アプリ本体</Filter>
+    </ClCompile>
+    <ClCompile Include="LS11DotNet.cpp">
+      <Filter>ライブラリ\LS11Mod DotNet</Filter>
+    </ClCompile>
+    <ClCompile Include="Native\ls11_decode.cpp">
+      <Filter>ライブラリ\LS11Mod Native</Filter>
+    </ClCompile>
+    <ClCompile Include="Native\ls11_decodePack.cpp">
+      <Filter>ライブラリ\LS11Mod Native</Filter>
+    </ClCompile>
+    <ClCompile Include="Native\ls11_encode.cpp">
+      <Filter>ライブラリ\LS11Mod Native</Filter>
+    </ClCompile>
+    <ClCompile Include="Native\ls11_encodePack.cpp">
+      <Filter>ライブラリ\LS11Mod Native</Filter>
+    </ClCompile>
+    <ClCompile Include="Native\ls11_getFileData.cpp">
+      <Filter>ライブラリ\LS11Mod Native</Filter>
+    </ClCompile>
+    <ClCompile Include="Native\ls11_joinData.cpp">
+      <Filter>ライブラリ\LS11Mod Native</Filter>
+    </ClCompile>
+    <ClCompile Include="Native\ls11_outFileData.cpp">
+      <Filter>ライブラリ\LS11Mod Native</Filter>
+    </ClCompile>
+    <ClCompile Include="Native\ls11_splitData.cpp">
+      <Filter>ライブラリ\LS11Mod Native</Filter>
+    </ClCompile>
+    <ClCompile Include="CnvHankakuZenakaku.cpp">
+      <Filter>ライブラリ\半角⇔全角変換</Filter>
+    </ClCompile>
+    <ClCompile Include="OnigRegex.cpp">
+      <Filter>ライブラリ\鬼車</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputDebugStream.cpp">
+      <Filter>ライブラリ\デバッグ</Filter>
+    </ClCompile>
+    <ClCompile Include="DotNetStringToMultiByte.cpp">
+      <Filter>ライブラリ\マネージ文字列⇒アンマネージ文字列</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="RetsudenEditor.rc">
+      <Filter>リソース</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RetsudenEditorRes.resx">
+      <Filter>リソース</Filter>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="oniguruma\oniguruma.lib">
+      <Filter>ライブラリ\鬼車\Lib</Filter>
+    </Library>
+  </ItemGroup>
+</Project>

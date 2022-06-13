@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RetsudenEditor", "RetsudenEditor\RetsudenEditor.vcxproj", "{7ECB1D10-5F23-4D52-BE51-7D2E5B95F0FF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "oniguruma", "oniguruma\oniguruma.vcxproj", "{50436679-ED53-4D91-A26A-0EAF84635184}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7ECB1D10-5F23-4D52-BE51-7D2E5B95F0FF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7ECB1D10-5F23-4D52-BE51-7D2E5B95F0FF}.Debug|Win32.Build.0 = Debug|Win32
+		{7ECB1D10-5F23-4D52-BE51-7D2E5B95F0FF}.Release|Win32.ActiveCfg = Release|Win32
+		{7ECB1D10-5F23-4D52-BE51-7D2E5B95F0FF}.Release|Win32.Build.0 = Release|Win32
+		{50436679-ED53-4D91-A26A-0EAF84635184}.Debug|Win32.ActiveCfg = Debug|Win32
+		{50436679-ED53-4D91-A26A-0EAF84635184}.Debug|Win32.Build.0 = Debug|Win32
+		{50436679-ED53-4D91-A26A-0EAF84635184}.Release|Win32.ActiveCfg = Release|Win32
+		{50436679-ED53-4D91-A26A-0EAF84635184}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

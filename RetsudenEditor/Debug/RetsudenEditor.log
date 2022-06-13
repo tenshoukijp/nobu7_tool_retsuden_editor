@@ -1,0 +1,25 @@
+﻿  CnvHankakuZenakaku.cpp
+  DotNetStringToMultiByte.cpp
+  LS11DotNet.cpp
+  main.cpp
+  ls11_decode.cpp
+g:\repogitory_jp\nobu7_yool_retsuden_editor\retsudeneditor\native\ls11_decode.cpp(175): warning C4302: '型キャスト': 'const char *' から 'unsigned char' へ切り詰めます。
+g:\repogitory_jp\nobu7_yool_retsuden_editor\retsudeneditor\native\ls11_decode.cpp(184): warning C4302: '型キャスト': 'const char *' から 'unsigned char' へ切り詰めます。
+  ls11_decodePack.cpp
+  ls11_encode.cpp
+  ls11_encodePack.cpp
+  ls11_getFileData.cpp
+  ls11_joinData.cpp
+  ls11_outFileData.cpp
+  ls11_splitData.cpp
+g:\repogitory_jp\nobu7_yool_retsuden_editor\retsudeneditor\native\ls11_splitdata.cpp(27): warning C4267: '引数': 'size_t' から '_Ty' に変換しました。データが失われているかもしれません。
+          with
+          [
+              _Ty=WORD
+          ]
+  OnigRegex.cpp
+  OutputDebugStream.cpp
+  コードを生成中...
+  .NETFramework,Version=v4.7.2.AssemblyAttributes.cpp
+  LINK : /LTCG が指定されましたが、コードの生成は必要ありません。リンク コマンド ラインから /LTCG を削除し、リンカーの性能を改善してください。
+  RetsudenEditor.vcxproj -> G:\repogitory_jp\nobu7_yool_retsuden_editor\Debug\RetsudenEditor.exe
