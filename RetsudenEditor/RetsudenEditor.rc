@@ -69,12 +69,12 @@ BEGIN
     BEGIN
         BLOCK "041104b0"
         BEGIN
-            VALUE "FileDescription", "天翔記 列伝エディタ ツール"
+            VALUE "FileDescription", "将星録 列伝エディタ ツール"
             VALUE "FileVersion", "0.9.5.3"
             VALUE "InternalName", "RetsudenEditor"
-            VALUE "LegalCopyright", "Copyright (C) 2016 天翔記.jp"
+            VALUE "LegalCopyright", "Copyright (C) 2016-2022 天翔記.jp"
             VALUE "OriginalFilename", "RetsudenEditor.exe"
-            VALUE "ProductName", "天翔記 列伝エディタ ツール"
+            VALUE "ProductName", "将星録 列伝エディタ ツール"
             VALUE "ProductVersion", "0.9.5.3"
         END
     END

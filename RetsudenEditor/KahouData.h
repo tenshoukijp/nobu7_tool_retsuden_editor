@@ -18,7 +18,7 @@ using namespace System::Windows::Forms;
 using namespace System::Text::RegularExpressions;
 
 
-char *szKahouTargetFileName = "message.n6p"; // ★
+char *szKahouTargetFileName = "message.nb7";
 
 // ちょうど vBufKahouDecodedData[0]=１番目の分割ファイルのデータ列、vBufKahouDecodedData[1]=２番目の分割ファイルのデータ列、みたいな感じ
 vector<vector<byte>> vBufKahouDecodedData;
@@ -38,7 +38,7 @@ public:
 		lstStrBornEtc  = gcnew List<String^>();
 		lstStrRetsuden = gcnew List<String^>();
 
-		// KahouData_Import();
+		KahouData_Import();
 	}
 
 	//  文字列を置換する

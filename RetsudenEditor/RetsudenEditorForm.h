@@ -16,7 +16,7 @@ ref class RetsudenEditorForm : public Form {
 
 	TabControl^ tcRE;	// 全体で１つになってるタブコントロール。TabPage型を追加してく
 
-	static cli::array<String^>^ aryStrFontCandidate = {"天翔 明朝", "天翔 PC98", "天翔 さざ波", "天翔 八丁堀", "真天翔明朝", "ＭＳ 明朝", "ＭＳ ゴシック" }; // フォントリスト
+	static cli::array<String^>^ aryStrFontCandidate = {"天翔 明朝", "天翔 PC98", "天翔 さざ波", "天翔 八丁堀", "ＭＳ 明朝", "ＭＳ ゴシック" }; // フォントリスト
 
 public:
 	RetsudenEditorForm() {
@@ -48,18 +48,13 @@ public:
 		tpBushou_Init();
 		Bushou_SetEventHander();
 
-		// ★
 		// 家宝列伝のタブページ追加
-		/*
-		tpKahou_Init();
-		Kahou_SetEventHander();
-		*/
+		// tpKahou_Init();
+		// Kahou_SetEventHander();
 
 		// 城列伝のタブページ追加
-		/*
 		tpCastle_Init();
 		Castle_SetEventHander();
-		*/
 
 		tcRE->SelectedIndexChanged += gcnew EventHandler(this, &RetsudenEditorForm::tcRE_SelectedIndexChanged);
 		this->Controls->Add(tcRE);
@@ -214,6 +209,7 @@ private:
 
 		Bushou_cbFont_SelectedIndexChanged(nullptr, nullptr);
 
+		/*
 		// 武将枠50人追加
 		btnBushouAdds = gcnew Button();
 		btnBushouAdds->Text = "50枠追加";
@@ -229,19 +225,19 @@ private:
 		btnBushouDels->Height = tbBushouSearch->Height;
 		btnBushouDels->Left = btnBushouAdds->Right;
 		btnBushouDels->Top = lbBushouList->Bottom + 10;
-
+		*/
 
 		// 武将列伝のタブにコンポーネント追加
 		tpBushou->Controls->Add(tbBushouSearch);
 		tpBushou->Controls->Add(btnBushouSearch);
-		tpBushou->Controls->Add(btnBushouImport);
-		tpBushou->Controls->Add(btnBushouExport);
+		// tpBushou->Controls->Add(btnBushouImport);
+		// tpBushou->Controls->Add(btnBushouExport);
 		tpBushou->Controls->Add(btnBushouAllSave);
 		tpBushou->Controls->Add(lbBushouList);
 		tpBushou->Controls->Add(plBushouRetsuden);
 		tpBushou->Controls->Add(cbFontBushou);
-		tpBushou->Controls->Add(btnBushouAdds);
-		tpBushou->Controls->Add(btnBushouDels);
+		// tpBushou->Controls->Add(btnBushouAdds);
+		// tpBushou->Controls->Add(btnBushouDels);
 		
 		// タブをフォームに追加
 		tcRE->TabPages->Add(tpBushou);
@@ -293,8 +289,8 @@ private:
 		tbBushouBornEtc->Leave += gcnew EventHandler( this, &RetsudenEditorForm::Bushou_textBox_Leave);
 		tbBushouRetsuden->Leave += gcnew EventHandler( this, &RetsudenEditorForm::Bushou_textBox_Leave);
 		cbFontBushou->SelectedIndexChanged += gcnew EventHandler(this, &RetsudenEditorForm::Bushou_cbFont_SelectedIndexChanged);
-		btnBushouAdds->Click += gcnew EventHandler(this, &RetsudenEditorForm::Bushou_btnAddBushous_Click);
-		btnBushouDels->Click += gcnew EventHandler(this, &RetsudenEditorForm::Bushou_btnDelBushous_Click);
+		// btnBushouAdds->Click += gcnew EventHandler(this, &RetsudenEditorForm::Bushou_btnAddBushous_Click);
+		// btnBushouDels->Click += gcnew EventHandler(this, &RetsudenEditorForm::Bushou_btnDelBushous_Click);
 	}
 
 	// 武将検索ボタンを押した時
@@ -618,6 +614,7 @@ private:
 		btnKahouSearch->Left = tbKahouSearch->Right + 1;
 		btnKahouSearch->Top = tbKahouSearch->Top;
 
+		/*
 		// 取込ボタン
 		btnKahouImport = gcnew Button();
 		btnKahouImport->Text = "単独取込";
@@ -633,6 +630,7 @@ private:
 		btnKahouExport->Height = tbKahouSearch->Height;
 		btnKahouExport->Left = btnKahouImport->Right;
 		btnKahouExport->Top = tbKahouSearch->Top;
+		*/
 
 		// 全て保存
 		btnKahouAllSave = gcnew Button();

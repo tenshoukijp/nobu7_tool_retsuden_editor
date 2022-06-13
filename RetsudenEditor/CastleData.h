@@ -18,7 +18,7 @@ using namespace System::Windows::Forms;
 using namespace System::Text::RegularExpressions;
 
 
-char *szCastleTargetFileName = "message.n6p"; // ★
+char *szCastleTargetFileName = "message.nb7";
 
 // ちょうど vBufCastleDecodedData[0]=１番目の分割ファイルのデータ列、vBufCastleDecodedData[1]=２番目の分割ファイルのデータ列、みたいな感じ
 vector<vector<byte>> vBufCastleDecodedData;
@@ -51,7 +51,7 @@ public:
 		lstStrBornEtc  = gcnew List<String^>();
 		lstStrRetsuden = gcnew List<String^>();
 
-		// CastleData_Import();
+		CastleData_Import();
 	}
 
 	//  文字列を置換する
@@ -106,69 +106,28 @@ public:
 
 	// 名前系のUnmanaged→Managedへと抽出。
 	void NameAssignManagedData(char *pUnmanagedLine) {
-		string nestline = string(pUnmanagedLine);
+		string line = string(pUnmanagedLine);
 
 		// １つのラインに複数の城が含まれている場合がある。最大でシナリオ数である６つが含まれる。
 		Matches matches;
 
 		vector<CastleType> nest;
 
-		for ( int i=0; i<6; i++ ) {
-
-			// 複数の城が１つに収まっている場合、このような形。\x05が２つ以上あるはず。
-			if ( OnigMatch(nestline, "^(.+)\x05\x05\x05(.*?)\x05\x05\x05$", &matches ) ) {
-
-				string prev = matches[1]; // 前にくっついている残りの城
-				string last = matches[2]; // 最後にくっついている城(主眼)
-				CastleType ct = {NULL};
-
-
-				// 前半の奇怪なられつは「登場シナリオ」のシグナルで、=\dが登場シナリオの番号
-				if ( OnigMatch(last, "^(\x01.*=\\d)?(.*?)\x20\x1b\x6b(.*?)$", &matches) ) {
+		CastleType ct;
+		if ( OnigMatch(line, "^(.*?)\x81\x40\x1b\x6b(.*?)\x05\x05\x05$", &matches) ) {
 					
-					// こっちは複数ネストの最後の１つ（メインのもの）は存在せず、それ以外はくっついている。
-					// matches[1]==""ということは「くっついているものの余りのシナリオ」であることを意味する。
-					strcpy( ct.binAppearanceScenario, matches[1].c_str() );
+			// 城名は絶対に存在しなければならない
+			// 半角カタカナ→全角ひらがなの例のやつ
+			string strFullName = HankakuKatakanaToZentakuKatakana(matches[1].c_str());
 
-					// 城名は絶対に存在しなければならない
-					// 半角カタカナ→全角ひらがなの例のやつ
-					string strFullName = HankakuKatakanaToZentakuKatakana(matches[2].c_str());
+			// 城名は絶対に存在しなければならない
+			strcpy( ct.szFullName, strFullName.c_str() );
 
-					// 城名は絶対に存在しなければならない
-					strcpy( ct.szFullName, strFullName.c_str() );
+			// 城名は絶対に存在しなければならない
+			strcpy( ct.szRubyYomi, matches[2].c_str() );
 
-					// 城名は絶対に存在しなければならない
-					strcpy( ct.szRubyYomi, matches[3].c_str() );
+			nest.push_back(ct);
 
-					nest.push_back(ct);
-
-				}
-
-				nestline = prev + "\x05\x05\x05"; // 一番最後のを１つけずる
-			}
-
-			// 複数の城が１つに収まっている場合、このような形。\x05が２つ以上あるはず。
-			// 前半の奇怪なられつは「登場シナリオ」のシグナルで、=\dが登場シナリオの番号
-			else if ( OnigMatch(nestline, "^(\x01.*=\\d)?(.*?)\x20\x1b\x6b(.*?)\x05\x05\x05$", &matches) ) {
-				CastleType ct = {NULL};
-
-				// こっちは複数ネストの最後の１つ（メインのもの）は存在せず、それ以外はくっついている。
-				// matches[1]==""ということは「くっついているものの余りのシナリオ」であることを意味する。
-				strcpy( ct.binAppearanceScenario, matches[1].c_str() );
-
-				// 城名は絶対に存在しなければならない
-				// 半角カタカナ→全角ひらがなの例のやつ
-				string strFullName = HankakuKatakanaToZentakuKatakana(matches[2].c_str());
-
-				strcpy( ct.szFullName, strFullName.c_str() );
-
-				// 城名は絶対に存在しなければならない
-				strcpy( ct.szRubyYomi, matches[3].c_str() );
-
-				nest.push_back(ct);
-
-				nestline = "";
-			}
 		}
 
 
@@ -343,7 +302,7 @@ public:
 		int ivBufDecodedDataSize = vBufCastleDecodedData.size();
 
 		// 18番目からスタートしている!! 注意!!
-		for ( int ifile = 18; ifile <= 22 && ifile < (int)ivBufDecodedDataSize ; ifile++ ) {
+		for ( int ifile = 30; ifile <= 31 && ifile < (int)ivBufDecodedDataSize ; ifile++ ) {
 
 			// ちょうど vSplittedData[0]=１番目の要素のデータ列、vSplittedData[1]=２番目の要素のデータ列、みたいな感じ
 			vector<vector<byte>> vSplittedData;
@@ -422,22 +381,19 @@ public:
 
 	BOOL AllSaveToMessageN6P() {
 		// 城列伝の長さを満たしていなければ、ダメ
-		if ( vBufCastleDecodedData.size() < 17 ) {
+		if ( vBufCastleDecodedData.size() < 31 ) {
 			return FALSE;
 		}
 		// 城列伝が入っている３つの所をクリア。
-		vBufCastleDecodedData[18].clear(); 
-		vBufCastleDecodedData[19].clear(); 
-		vBufCastleDecodedData[20].clear(); 
-		vBufCastleDecodedData[21].clear(); 
-		vBufCastleDecodedData[22].clear(); 
+		vBufCastleDecodedData[30].clear(); 
+		vBufCastleDecodedData[31].clear(); 
 
 		// 城列伝全てについて･･･
-		int iFileCnt = 5; // 仮想ファイル(メモリ上)を作るカウント数。１つあたり50個なので。
+		int iFileCnt = 2; // 仮想ファイル(メモリ上)を作るカウント数。１つあたり50個なので。
 
 		// それぞれの城番号の開始番号を送りながら、仮想ファイルファイル分繰り返す。vBufCastleDecodedData に付け加えられてゆく。
 		for ( int f=0; f<iFileCnt; f++) {
-			MakeSplittedDataToJoindData( f*50, 18+f );
+			MakeSplittedDataToJoindData( f*50, 30+f );
 		}
 
 		// メモリ→パック化イメージ
