@@ -4,6 +4,7 @@
 #include "HimeData.h"
 #include "KahouData.h"
 #include "CastleData.h"
+#include "KanniData.h"
 
 // RetsudenEditor.cpp : メイン プロジェクト ファイルです。
 #include <windows.h>
@@ -60,6 +61,10 @@ public:
 		// 城列伝のタブページ追加
 		tpCastle_Init();
 		Castle_SetEventHander();
+
+		// 官位列伝のタブページ追加
+		tpKanni_Init();
+		Kanni_SetEventHander();
 
 		tcRE->SelectedIndexChanged += gcnew EventHandler(this, &RetsudenEditorForm::tcRE_SelectedIndexChanged);
 		this->Controls->Add(tcRE);
@@ -566,35 +571,6 @@ private:
 	}
 
 
-//-----------------------------------------------家宝列伝系
-private:
-	TabPage^ tpKahou;
-	KahouData^ bdKahouData;
-
-	TextBox^ tbKahouSearch; // 家宝検索
-	Button^ btnKahouSearch; // 検索ボタン
-	Button^ btnKahouImport; // 取込ボタン
-	Button^ btnKahouExport; // 出力ボタン
-	Button^ btnKahouAllSave; // 全て保存
-
-	ListBox^ lbKahouList; // 家宝リストのコンボボックス
-	int iLastKahouListSelected;
-
-	Panel^ plKahouRetsuden;	 // 列伝情報用のパネル
-	TextBox^ tbKahouFullName; // 家宝姓名のテキストボックス
-	TextBox^ tbKahouRubyYomi; // ふりがなのるび
-	TextBox^ tbKahouBornEtc;  // 生年などの情報
-	TextBox^ tbKahouRetsuden; // 列伝情報
-
-
-	// フォント
-	System::Drawing::Font^ fontKahou;
-	ComboBox^ cbFontKahou;	// フォントリスト
-
-	Button^ btnKahouAdds; // 50枠追加
-	Button^ btnKahouDels; // 50枠追加
-
-
 
 
 //-----------------------------------------------武将列伝系
@@ -1092,6 +1068,36 @@ private:
 
 
 
+//-----------------------------------------------家宝列伝系
+private:
+	TabPage^ tpKahou;
+	KahouData^ bdKahouData;
+
+	TextBox^ tbKahouSearch; // 家宝検索
+	Button^ btnKahouSearch; // 検索ボタン
+	Button^ btnKahouImport; // 取込ボタン
+	Button^ btnKahouExport; // 出力ボタン
+	Button^ btnKahouAllSave; // 全て保存
+
+	ListBox^ lbKahouList; // 家宝リストのコンボボックス
+	int iLastKahouListSelected;
+
+	Panel^ plKahouRetsuden;	 // 列伝情報用のパネル
+	TextBox^ tbKahouFullName; // 家宝姓名のテキストボックス
+	TextBox^ tbKahouRubyYomi; // ふりがなのるび
+	TextBox^ tbKahouBornEtc;  // 生年などの情報
+	TextBox^ tbKahouRetsuden; // 列伝情報
+
+
+	// フォント
+	System::Drawing::Font^ fontKahou;
+	ComboBox^ cbFontKahou;	// フォントリスト
+
+	Button^ btnKahouAdds; // 50枠追加
+	Button^ btnKahouDels; // 50枠追加
+
+
+
 private:
 
 	void tpKahou_Init() {
@@ -1482,22 +1488,22 @@ private:
 	void Kahou_btnDelKahous_Click(Object^ sender, EventArgs^ e) {
 	}
 
-//-----------------------------------------------城列伝系
+	//-----------------------------------------------城列伝系
 private:
 	TabPage^ tpCastle;
 	CastleData^ bdCastleData;
 
-	TextBox^ tbCastleSearch; // 家宝検索
+	TextBox^ tbCastleSearch; // 城検索
 	Button^ btnCastleSearch; // 検索ボタン
 	Button^ btnCastleImport; // 取込ボタン
 	Button^ btnCastleExport; // 出力ボタン
 	Button^ btnCastleAllSave; // 全て保存
 
-	ListBox^ lbCastleList; // 家宝リストのコンボボックス
+	ListBox^ lbCastleList; // 城リストのコンボボックス
 	int iLastCastleListSelected;
 
 	Panel^ plCastleRetsuden;	 // 列伝情報用のパネル
-	TextBox^ tbCastleFullName; // 家宝姓名のテキストボックス
+	TextBox^ tbCastleFullName; // 城姓名のテキストボックス
 	TextBox^ tbCastleRubyYomi; // ふりがなのるび
 	TextBox^ tbCastleBornEtc;  // 生年などの情報
 	TextBox^ tbCastleRetsuden; // 列伝情報
@@ -1520,7 +1526,7 @@ private:
 		tpCastle->Text = "城列伝";
 		tpCastle->Size = tcRE->ClientSize;
 
-		// 家宝検索
+		// 城検索
 		tbCastleSearch = gcnew TextBox();
 		tbCastleSearch->Width = 140;
 		tbCastleSearch->Height = 16;
@@ -1561,7 +1567,7 @@ private:
 		btnCastleAllSave->Left = tpCastle->Right - (btnCastleAllSave->Width + 20);
 		btnCastleAllSave->Top = tbCastleSearch->Top;
 
-		// 家宝知ると
+		// 城知ると
 		lbCastleList = gcnew ListBox();
 		lbCastleList->Width = tbCastleSearch->Width;
 		lbCastleList->Left = tbCastleSearch->Left;
@@ -1621,7 +1627,7 @@ private:
 
 		Castle_cbFont_SelectedIndexChanged(nullptr, nullptr);
 
-		// 家宝枠50人追加
+		// 城枠50人追加
 		btnCastleAdds = gcnew Button();
 		btnCastleAdds->Text = "50枠追加";
 		btnCastleAdds->Width = 70;
@@ -1629,7 +1635,7 @@ private:
 		btnCastleAdds->Left = tbCastleSearch->Left;
 		btnCastleAdds->Top = lbCastleList->Bottom + 10;
 
-		// 家宝枠50人削除
+		// 城枠50人削除
 		btnCastleDels = gcnew Button();
 		btnCastleDels->Text = "50枠削除";
 		btnCastleDels->Width = 70;
@@ -1638,7 +1644,7 @@ private:
 		btnCastleDels->Top = lbCastleList->Bottom + 10;
 
 
-		// 家宝列伝のタブにコンポーネント追加
+		// 城列伝のタブにコンポーネント追加
 		tpCastle->Controls->Add(tbCastleSearch);
 		tpCastle->Controls->Add(btnCastleSearch);
 		// tpCastle->Controls->Add(btnCastleImport);
@@ -1647,13 +1653,13 @@ private:
 		tpCastle->Controls->Add(lbCastleList);
 		tpCastle->Controls->Add(plCastleRetsuden);
 		tpCastle->Controls->Add(cbFontCastle);
-		// tpCastle->Controls->Add(btnCastleAdds); // 家宝用にはこのボタンは不要
-		// tpCastle->Controls->Add(btnCastleDels); // 家宝用にはこのボタンは不要
+		// tpCastle->Controls->Add(btnCastleAdds); // 城用にはこのボタンは不要
+		// tpCastle->Controls->Add(btnCastleDels); // 城用にはこのボタンは不要
 
 		// タブをフォームに追加
 		tcRE->TabPages->Add(tpCastle);
 
-		// 家宝データを作成して、リストに流しこむ
+		// 城データを作成して、リストに流しこむ
 		bdCastleData = gcnew CastleData();
 		// リストボックスに足し込み
 		for (int i = 0; i < bdCastleData->lstStrFullName->Count; i++) {
@@ -1665,7 +1671,7 @@ private:
 		lbCastleList->SelectedIndex = 0;
 		iLastCastleListSelected = 0;
 
-		// 家宝データ→テキストボックス
+		// 城データ→テキストボックス
 		Castle_BDataToTextBox();
 		Castle_TextBoxWidthUpdate();
 	}
@@ -1704,7 +1710,7 @@ private:
 		// btnCastleDels->Click += gcnew EventHandler(this, &RetsudenEditorForm::Castle_btnDelCastles_Click);
 	}
 
-	// 家宝検索ボタンを押した時
+	// 城検索ボタンを押した時
 	void Castle_btnSearch_Click(Object^ sender, EventArgs^ e) {
 		if (tbCastleSearch->Text == "") { return; } // テキストエリアが空っぽなら何もしない。
 
@@ -1736,7 +1742,7 @@ private:
 		}
 	}
 
-	// 家宝検索テキストボックスでキーを押した時
+	// 城検索テキストボックスでキーを押した時
 	void Castle_tbSearch_KeyDown(Object^ sender, KeyEventArgs^ e) {
 		if (e->KeyCode == Keys::Return) {
 			Castle_btnSearch_Click(sender, e);
@@ -1746,12 +1752,12 @@ private:
 		}
 	}
 
-	// 家宝出力ボタンを押した時
+	// 城出力ボタンを押した時
 	void Castle_btnExport_Click(Object^ sender, EventArgs^ e) {
 	}
 
 
-	// 家宝入力ボタンを押した時
+	// 城入力ボタンを押した時
 	void Castle_btnImport_Click(Object^ sender, EventArgs^ e) {
 	}
 
@@ -1820,7 +1826,7 @@ private:
 	}
 
 
-	// 家宝リストを選択変更すると、画像の上の列伝各種の値が入れ替わる
+	// 城リストを選択変更すると、画像の上の列伝各種の値が入れ替わる
 	void Castle_lbCastleList_SelectedIndexChanged(Object^ sender, EventArgs^ e) {
 		ModifyCBCastleSelectedIndex();
 		// 新たなindexのデータを取得。
@@ -1830,7 +1836,7 @@ private:
 	}
 
 
-	// 家宝データ→テキストボックスへ転写
+	// 城データ→テキストボックスへ転写
 	void Castle_BDataToTextBox() {
 		int iSelectedIndex = GetCastleCBSelectedIndex();
 		tbCastleFullName->Text = bdCastleData->lstStrFullName[iSelectedIndex];
@@ -1850,7 +1856,7 @@ private:
 		tbCastleBornEtc->Width = GetStringMeasure(tbCastleBornEtc->Text);
 	}
 
-	// テキストボックスの、「家宝姓名」が変更された。
+	// テキストボックスの、「城姓名」が変更された。
 	void Castle_tbFullName_TextChanged(Object^ sender, EventArgs^ e) {
 		int iSelectedIndex = GetCastleCBSelectedIndex();
 		bdCastleData->lstStrFullName[iSelectedIndex] = tbCastleFullName->Text;
@@ -1860,7 +1866,7 @@ private:
 
 		// 反応しないようにしたので、値を書き換える。SelectedIndexChangeメソッドが反応しないのでエラーが起きない。
 
-		lbCastleList->Items[iSelectedIndex] = gcnew String(strLine); // 家宝リストの名前の方を更新
+		lbCastleList->Items[iSelectedIndex] = gcnew String(strLine); // 城リストの名前の方を更新
 
 		Castle_TextBoxWidthUpdate();
 
@@ -1901,6 +1907,427 @@ private:
 
 	// 50枠削除ボタン
 	void Castle_btnDelCastles_Click(Object^ sender, EventArgs^ e) {
+	}
+
+
+	//-----------------------------------------------官位列伝系
+private:
+	TabPage^ tpKanni;
+	KanniData^ bdKanniData;
+
+	TextBox^ tbKanniSearch; // 官位検索
+	Button^ btnKanniSearch; // 検索ボタン
+	Button^ btnKanniImport; // 取込ボタン
+	Button^ btnKanniExport; // 出力ボタン
+	Button^ btnKanniAllSave; // 全て保存
+
+	ListBox^ lbKanniList; // 官位リストのコンボボックス
+	int iLastKanniListSelected;
+
+	Panel^ plKanniRetsuden;	 // 列伝情報用のパネル
+	TextBox^ tbKanniFullName; // 官位姓名のテキストボックス
+	TextBox^ tbKanniRubyYomi; // ふりがなのるび
+	TextBox^ tbKanniBornEtc;  // 生年などの情報
+	TextBox^ tbKanniRetsuden; // 列伝情報
+
+
+	// フォント
+	System::Drawing::Font^ fontKanni;
+	ComboBox^ cbFontKanni;	// フォントリスト
+
+	Button^ btnKanniAdds; // 50枠追加
+	Button^ btnKanniDels; // 50枠追加
+
+private:
+
+	void tpKanni_Init() {
+
+		tpKanni = gcnew TabPage();
+
+		tpKanni->Text = "官位列伝";
+		tpKanni->Size = tcRE->ClientSize;
+
+		// 官位検索
+		tbKanniSearch = gcnew TextBox();
+		tbKanniSearch->Width = 140;
+		tbKanniSearch->Height = 16;
+		tbKanniSearch->Left = 10;
+		tbKanniSearch->Top = 10;
+
+		// 検索ボタン
+		btnKanniSearch = gcnew Button();
+		btnKanniSearch->Text = "検索";
+		btnKanniSearch->Width = 60;
+		btnKanniSearch->Height = tbKanniSearch->Height;
+		btnKanniSearch->Left = tbKanniSearch->Right + 1;
+		btnKanniSearch->Top = tbKanniSearch->Top;
+
+		/*
+		// 取込ボタン
+		btnKanniImport = gcnew Button();
+		btnKanniImport->Text = "単独取込";
+		btnKanniImport->Width = 70;
+		btnKanniImport->Height = tbKanniSearch->Height;
+		btnKanniImport->Left = btnKanniSearch->Right + 30;
+		btnKanniImport->Top = tbKanniSearch->Top;
+
+		// 出力ボタン
+		btnKanniExport = gcnew Button();
+		btnKanniExport->Text = "単独出力";
+		btnKanniExport->Width = 70;
+		btnKanniExport->Height = tbKanniSearch->Height;
+		btnKanniExport->Left = btnKanniImport->Right;
+		btnKanniExport->Top = tbKanniSearch->Top;
+		*/
+
+		// 全て保存
+		btnKanniAllSave = gcnew Button();
+		btnKanniAllSave->Text = "全て保存";
+		btnKanniAllSave->Width = 70;
+		btnKanniAllSave->Height = tbKanniSearch->Height;
+		btnKanniAllSave->Left = tpKanni->Right - (btnKanniAllSave->Width + 20);
+		btnKanniAllSave->Top = tbKanniSearch->Top;
+
+		// 官位知ると
+		lbKanniList = gcnew ListBox();
+		lbKanniList->Width = tbKanniSearch->Width;
+		lbKanniList->Left = tbKanniSearch->Left;
+		lbKanniList->Top = tbKanniSearch->Bottom + 10;
+		lbKanniList->Height = 200;
+
+		// 列伝情報用のパネル
+		plKanniRetsuden = gcnew Panel();
+		plKanniRetsuden->Top = lbKanniList->Top + 20;
+		Kanni_SetPanelBackImg();
+		plKanniRetsuden->Left = tpKanni->Right - (plKanniRetsuden->Width + 20);
+
+		tbKanniFullName = gcnew TextBox();
+		tbKanniFullName->Top = 10;
+		tbKanniFullName->Left = 10;
+		tbKanniFullName->Width = 16 * 6 + 6;
+		tbKanniFullName->MaxLength = 37;
+		tbKanniFullName->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
+
+		tbKanniRubyYomi = gcnew TextBox();
+		tbKanniRubyYomi->Top = tbKanniFullName->Top;
+		tbKanniRubyYomi->Left = tbKanniFullName->Right;
+		tbKanniRubyYomi->MaxLength = 37;
+		tbKanniRubyYomi->Width = 16 * 5 + 6;
+		tbKanniRubyYomi->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
+
+		tbKanniBornEtc = gcnew TextBox();
+		tbKanniBornEtc->Top = tbKanniFullName->Top;
+		tbKanniBornEtc->Left = tbKanniRubyYomi->Right;
+		tbKanniBornEtc->Width = 16 * 5 + 8;
+		tbKanniBornEtc->MaxLength = 37;
+		tbKanniBornEtc->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
+
+		tbKanniRetsuden = gcnew TextBox();
+		tbKanniRetsuden->Top = tbKanniFullName->Bottom + 12;
+		tbKanniRetsuden->Left = tbKanniFullName->Left;
+		tbKanniRetsuden->Height = 90;
+		tbKanniRetsuden->Width = 312;
+		tbKanniRetsuden->MaxLength = 2 * 18 * 4;
+		tbKanniRetsuden->Multiline = true;
+		tbKanniRetsuden->WordWrap = false;
+		tbKanniRetsuden->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
+
+
+		plKanniRetsuden->Controls->Add(tbKanniFullName);
+		plKanniRetsuden->Controls->Add(tbKanniRubyYomi);
+		// plKanniRetsuden->Controls->Add(tbKanniBornEtc);
+		plKanniRetsuden->Controls->Add(tbKanniRetsuden);
+
+		// フォントリスト
+		cbFontKanni = gcnew ComboBox();
+		cbFontKanni->Width = 100;
+		cbFontKanni->Left = tpKanni->Right - (cbFontKanni->Width + 20);
+		cbFontKanni->Top = plKanniRetsuden->Bottom + 10;
+		cbFontKanni->Height = tbKanniSearch->Height;
+		Kanni_GetValidTenshoukiFontList();
+
+		Kanni_cbFont_SelectedIndexChanged(nullptr, nullptr);
+
+		// 官位枠50人追加
+		btnKanniAdds = gcnew Button();
+		btnKanniAdds->Text = "50枠追加";
+		btnKanniAdds->Width = 70;
+		btnKanniAdds->Height = tbKanniSearch->Height;
+		btnKanniAdds->Left = tbKanniSearch->Left;
+		btnKanniAdds->Top = lbKanniList->Bottom + 10;
+
+		// 官位枠50人削除
+		btnKanniDels = gcnew Button();
+		btnKanniDels->Text = "50枠削除";
+		btnKanniDels->Width = 70;
+		btnKanniDels->Height = tbKanniSearch->Height;
+		btnKanniDels->Left = btnKanniAdds->Right;
+		btnKanniDels->Top = lbKanniList->Bottom + 10;
+
+
+		// 官位列伝のタブにコンポーネント追加
+		tpKanni->Controls->Add(tbKanniSearch);
+		tpKanni->Controls->Add(btnKanniSearch);
+		// tpKanni->Controls->Add(btnKanniImport);
+		// tpKanni->Controls->Add(btnKanniExport);
+		tpKanni->Controls->Add(btnKanniAllSave);
+		tpKanni->Controls->Add(lbKanniList);
+		tpKanni->Controls->Add(plKanniRetsuden);
+		tpKanni->Controls->Add(cbFontKanni);
+		// tpKanni->Controls->Add(btnKanniAdds); // 官位用にはこのボタンは不要
+		// tpKanni->Controls->Add(btnKanniDels); // 官位用にはこのボタンは不要
+
+		// タブをフォームに追加
+		tcRE->TabPages->Add(tpKanni);
+
+		// 官位データを作成して、リストに流しこむ
+		bdKanniData = gcnew KanniData();
+		// リストボックスに足し込み
+		for (int i = 0; i < bdKanniData->lstStrFullName->Count; i++) {
+			String^ strLine = String::Format("{0:000} - {1}", i, bdKanniData->lstStrFullName[i]);
+			lbKanniList->Items->Add(strLine);
+		}
+
+		// 最初のものを選択しておく
+		lbKanniList->SelectedIndex = 0;
+		iLastKanniListSelected = 0;
+
+		// 官位データ→テキストボックス
+		Kanni_BDataToTextBox();
+		Kanni_TextBoxWidthUpdate();
+	}
+
+	// パネルの背景画像設定
+	void Kanni_SetPanelBackImg() {
+		// このプロジェクトのアセンブリのタイプを取得。
+		System::Reflection::Assembly^ prj_assebmly = GetType()->Assembly;
+		System::Resources::ResourceManager^ r = gcnew System::Resources::ResourceManager(String::Format("{0}.RetsudenEditorRes", prj_assebmly->GetName()->Name), prj_assebmly);
+
+		// パネルの背景
+		plKanniRetsuden->BackgroundImage = (System::Drawing::Image^)(r->GetObject("retsuden_back"));
+		// 背景画像の大きさにパネルの大きさを合わせる
+		plKanniRetsuden->Size = plKanniRetsuden->BackgroundImage->Size;
+
+	}
+
+	// 各種ＧＵＩのイベントハンドラ設定
+	void Kanni_SetEventHander() {
+		btnKanniSearch->Click += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_btnSearch_Click);
+		// btnKanniImport->Click += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_btnImport_Click);
+		// btnKanniExport->Click += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_btnExport_Click);
+		btnKanniAllSave->Click += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_btnAllSave_Click);
+		tbKanniSearch->KeyDown += gcnew KeyEventHandler(this, &RetsudenEditorForm::Kanni_tbSearch_KeyDown);
+		lbKanniList->SelectedIndexChanged += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_lbKanniList_SelectedIndexChanged);
+		tbKanniFullName->TextChanged += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_tbFullName_TextChanged);
+		tbKanniRubyYomi->TextChanged += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_tbRubyYomi_TextChanged);
+		tbKanniBornEtc->TextChanged += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_tbBornEtc_TextChanged);
+		tbKanniRetsuden->TextChanged += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_tbRetsuden_TextChanged);
+		tbKanniFullName->Leave += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_textBox_Leave);
+		tbKanniRubyYomi->Leave += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_textBox_Leave);
+		tbKanniBornEtc->Leave += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_textBox_Leave);
+		tbKanniRetsuden->Leave += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_textBox_Leave);
+		cbFontKanni->SelectedIndexChanged += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_cbFont_SelectedIndexChanged);
+		// btnKanniAdds->Click += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_btnAddKannis_Click);
+		// btnKanniDels->Click += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_btnDelKannis_Click);
+	}
+
+	// 官位検索ボタンを押した時
+	void Kanni_btnSearch_Click(Object^ sender, EventArgs^ e) {
+		if (tbKanniSearch->Text == "") { return; } // テキストエリアが空っぽなら何もしない。
+
+		int iStart = GetKanniCBSelectedIndex() + 1; // 現在選択しているもののから次の候補
+
+		Regex^ regex = gcnew Regex(tbKanniSearch->Text);
+
+		bool isExist = false;
+		// iStart以降を全部サーチして、
+		for (int i = iStart; i < lbKanniList->Items->Count; i++) {
+			Match^ match = regex->Match((String^)lbKanniList->Items[i]);
+
+			if (match->Success) {
+				lbKanniList->SelectedIndex = i;
+				isExist = true;
+				break;
+			}
+		}
+
+		if (!isExist) {
+			for (int i = 0; i < iStart; i++) {
+				Match^ match = regex->Match((String^)lbKanniList->Items[i]);
+
+				if (match->Success) {
+					lbKanniList->SelectedIndex = i;
+					break;
+				}
+			}
+		}
+	}
+
+	// 官位検索テキストボックスでキーを押した時
+	void Kanni_tbSearch_KeyDown(Object^ sender, KeyEventArgs^ e) {
+		if (e->KeyCode == Keys::Return) {
+			Kanni_btnSearch_Click(sender, e);
+		}
+		if (e->KeyCode == Keys::F3) {
+			Kanni_btnSearch_Click(sender, e);
+		}
+	}
+
+	// 官位出力ボタンを押した時
+	void Kanni_btnExport_Click(Object^ sender, EventArgs^ e) {
+	}
+
+
+	// 官位入力ボタンを押した時
+	void Kanni_btnImport_Click(Object^ sender, EventArgs^ e) {
+	}
+
+	// 全て保存ボタンを押した時
+	void Kanni_btnAllSave_Click(Object^ sender, EventArgs^ e) {
+		bdKanniData->AllSaveToMessageN6P();
+	}
+
+	// フォントリストの選択項目が変更された時
+	void Kanni_cbFont_SelectedIndexChanged(Object^ sender, EventArgs^ e) {
+		// フォントの設定
+		fontKanni = gcnew System::Drawing::Font((String^)cbFontKanni->Items[cbFontKanni->SelectedIndex], 12, FontStyle::Regular);
+		tbKanniFullName->Font = fontKanni;
+		tbKanniRubyYomi->Font = fontKanni;
+		tbKanniBornEtc->Font = fontKanni;
+		tbKanniRetsuden->Font = fontKanni;
+	}
+
+	// インストールされているフォントにしたがって、フォントリストボックスに追加
+	void Kanni_GetValidTenshoukiFontList() {
+
+		//InstalledFontCollectionオブジェクトの取得
+		System::Drawing::Text::InstalledFontCollection^ ifc = gcnew System::Drawing::Text::InstalledFontCollection();
+
+		//インストールされているすべてのフォントファミリアを取得
+		cli::array<FontFamily^>^ ffs = ifc->Families;
+
+		//ここでは候補となりえるフォント名のみ
+		for (int i = 0; i < aryStrFontCandidate->Length; i++) {
+
+			// フォントリスト
+			for each (FontFamily ^ ff in ffs) {
+
+				// 候補フォントがあった。
+				if (ff->Name == aryStrFontCandidate[i]) {
+					// コンボボックスに追加
+					cbFontKanni->Items->Add(ff->Name);
+				}
+			}
+		}
+
+		// １つ以上フォントがあったら、最初のものを選択しておく。
+		if (cbFontKanni->Items->Count > 0) {
+			cbFontKanni->SelectedIndex = 0;
+		}
+	}
+
+	int GetKanniCBSelectedIndex() {
+		int iSelectedIndex = lbKanniList->SelectedIndex;
+		if (0 <= iSelectedIndex && iSelectedIndex < lbKanniList->Items->Count) {
+			return iSelectedIndex;
+		}
+		else {
+			return 0;
+		}
+	}
+	void ModifyCBKanniSelectedIndex() {
+		// 焦点を見失っているようなら、最後に選択していたものを宛がう。
+		int iSelectIndex = GetKanniCBSelectedIndex();
+		if (iSelectIndex == 0xFFFFFFFF) {
+			lbKanniList->SelectedIndex = iLastKanniListSelected;
+		}
+		else {
+			iLastKanniListSelected = iSelectIndex;
+		}
+	}
+
+
+	// 官位リストを選択変更すると、画像の上の列伝各種の値が入れ替わる
+	void Kanni_lbKanniList_SelectedIndexChanged(Object^ sender, EventArgs^ e) {
+		ModifyCBKanniSelectedIndex();
+		// 新たなindexのデータを取得。
+		Kanni_BDataToTextBox();
+
+		ModifyCBKanniSelectedIndex();
+	}
+
+
+	// 官位データ→テキストボックスへ転写
+	void Kanni_BDataToTextBox() {
+		int iSelectedIndex = GetKanniCBSelectedIndex();
+		tbKanniFullName->Text = bdKanniData->lstStrFullName[iSelectedIndex];
+		tbKanniRubyYomi->Text = bdKanniData->lstStrRubyYomi[iSelectedIndex];
+		tbKanniBornEtc->Text = bdKanniData->lstStrBornEtc[iSelectedIndex];
+		tbKanniRetsuden->Text = bdKanniData->lstStrRetsuden[iSelectedIndex];
+	}
+
+	// テキストボックスの位置や幅を中身のテキスト量に従って変更
+	void Kanni_TextBoxWidthUpdate() {
+		tbKanniFullName->Width = GetStringMeasure(tbKanniFullName->Text);
+
+		tbKanniRubyYomi->Left = tbKanniFullName->Right + 8;
+		tbKanniRubyYomi->Width = GetStringMeasure(tbKanniRubyYomi->Text);
+
+		tbKanniBornEtc->Left = tbKanniRubyYomi->Right + 8;
+		tbKanniBornEtc->Width = GetStringMeasure(tbKanniBornEtc->Text);
+	}
+
+	// テキストボックスの、「官位姓名」が変更された。
+	void Kanni_tbFullName_TextChanged(Object^ sender, EventArgs^ e) {
+		int iSelectedIndex = GetKanniCBSelectedIndex();
+		bdKanniData->lstStrFullName[iSelectedIndex] = tbKanniFullName->Text;
+		String^ strLine = String::Format("{0:000} - {1}", iSelectedIndex, tbKanniFullName->Text);
+		// SelectIndexChangeが反応しないようにする。
+		lbKanniList->SelectedIndexChanged -= gcnew EventHandler(this, &RetsudenEditorForm::Kanni_lbKanniList_SelectedIndexChanged);
+
+		// 反応しないようにしたので、値を書き換える。SelectedIndexChangeメソッドが反応しないのでエラーが起きない。
+
+		lbKanniList->Items[iSelectedIndex] = gcnew String(strLine); // 官位リストの名前の方を更新
+
+		Kanni_TextBoxWidthUpdate();
+
+		// 更新したので、反応を戻す。
+		// SelectIndexChangeが反応するようにする。
+		lbKanniList->SelectedIndexChanged += gcnew EventHandler(this, &RetsudenEditorForm::Kanni_lbKanniList_SelectedIndexChanged);
+	}
+
+	// テキストボックスの、「ふりがな」が変更された。
+	void Kanni_tbRubyYomi_TextChanged(Object^ sender, EventArgs^ e) {
+		int iSelectedIndex = GetKanniCBSelectedIndex();
+		bdKanniData->lstStrRubyYomi[iSelectedIndex] = tbKanniRubyYomi->Text;
+		Kanni_TextBoxWidthUpdate();
+	}
+
+	// テキストボックスの、「生年等」が変更された。
+	void Kanni_tbBornEtc_TextChanged(Object^ sender, EventArgs^ e) {
+		int iSelectedIndex = GetKanniCBSelectedIndex();
+		bdKanniData->lstStrBornEtc[iSelectedIndex] = tbKanniBornEtc->Text;
+		Kanni_TextBoxWidthUpdate();
+	}
+
+	// テキストボックスの、「列伝」が変更された。
+	void Kanni_tbRetsuden_TextChanged(Object^ sender, EventArgs^ e) {
+		int iSelectedIndex = GetKanniCBSelectedIndex();
+
+		bdKanniData->lstStrRetsuden[iSelectedIndex] = tbKanniRetsuden->Text;
+	}
+
+	// テキストボックスから去った
+	void Kanni_textBox_Leave(Object^ sender, EventArgs^ e) {
+	}
+
+
+	// 50枠追加ボタン
+	void Kanni_btnAddKannis_Click(Object^ sender, EventArgs^ e) {
+	}
+
+	// 50枠削除ボタン
+	void Kanni_btnDelKannis_Click(Object^ sender, EventArgs^ e) {
 	}
 
 
