@@ -23,7 +23,6 @@ char *szCastleTargetFileName = "message.nb7";
 // ちょうど vBufCastleDecodedData[0]=１番目の分割ファイルのデータ列、vBufCastleDecodedData[1]=２番目の分割ファイルのデータ列、みたいな感じ
 vector<vector<byte>> vBufCastleDecodedData;
 
-
 struct CastleType {
 	char binAppearanceScenario[100]; // 登場シナリオバイナリ
 	char szFullName[32];
@@ -43,7 +42,6 @@ public:
 	List<String^>^ lstStrRubyYomi; // よみがな
 	List<String^>^ lstStrRetsuden; // 列伝
 	List<String^>^ lstStrBornEtc;  // 列伝の後ろにあるよくわからないデータ
-
 public:
 	CastleData() {
 		lstStrFullName = gcnew List<String^>();
@@ -146,106 +144,7 @@ public:
 	}
 
 
-	String^ RetsudenAssignManagedData(char *pUnmanagedLine, int ix) {
-
-		string nestline = string(pUnmanagedLine);
-
-		// １つのラインに複数の城が含まれている場合がある。最大でシナリオ数である６つが含まれる。
-		Matches matches;
-
-		vector<CastleTypeRetsuden> nest;
-
-		for ( int i=0; i<6; i++ ) {
-
-			// 複数の城が１つに収まっている場合、このような形。\x05が２つ以上あるはず。
-			if ( OnigMatch(nestline, "^(.+)\x05\x05\x05(.*?)\x05\x05\x05$", &matches ) ) {
-
-				string prev = matches[1]; // 前にくっついている残りの城
-				string last = matches[2]; // 最後にくっついている城(主眼)
-				CastleTypeRetsuden ctr = {NULL};
-
-
-				// 前半の奇怪なられつは「登場シナリオ」のシグナルで、=\dが登場シナリオの番号
-				if ( OnigMatch(last, "^(\x01.*=\\d)?(.*?)$", &matches) ) {
-
-					string szBufCurrent = HankakuKatakanaToZentakuKatakana(matches[2].c_str());
-
-					// 残りは、半角カタカナを全角ひらがなに
-					char szBufZenHiragana[256] = "";
-					hankana2zenhira((unsigned char *)szBufCurrent.c_str(), (unsigned char *)szBufZenHiragana);
-					szBufZenHiragana[255] = NULL; // 下手な修正しても暴走しないよう念のため
-
-					string strZenHiragana = string(szBufZenHiragana);
-
-					// 改行的意味合いのものを特殊な記号に置き換える。高速化のため。
-					for (int i=0; OnigMatch(strZenHiragana, "^(.*?)\x0A(.+)", &matches) && i<(int)strZenHiragana.size(); i++ ) { 
-						// 列伝から要素を抽出する。
-						if ( !matches[1].empty() ) {
-							strZenHiragana = matches[1] + "<r><n>" + matches[2];
-						}
-					}
-
-					// 特殊な記号を、列伝エディタ上での見た目の改行へと変換。
-					for (int i=0; OnigMatch(strZenHiragana, "^(.*?)<r><n>(.+)", &matches) && i<(int)strZenHiragana.size(); i++ ) { 
-						// 列伝から要素を抽出する。
-						if ( !matches[1].empty() ) {
-							strZenHiragana = matches[1] + "\r\n" + matches[2];
-						}
-					}
-
-					strcpy(ctr.szRetsuden, strZenHiragana.c_str());
-					nest.push_back(ctr);
-				}
-
-				nestline = prev + "\x05\x05\x05"; // 一番最後のを１つけずる
-			}
-			// 複数の城が１つに収まっている場合、このような形。\x05が２つ以上あるはず。
-			// 前半の奇怪なられつは「登場シナリオ」のシグナルで、=\dが登場シナリオの番号
-			else if ( OnigMatch(nestline, "^(\x01.*=\\d)?(.*?)\x05\x05\x05$", &matches) ) {
-
-				CastleTypeRetsuden ctr = {NULL};
-				string szBufCurrent = HankakuKatakanaToZentakuKatakana(matches[2].c_str());
-
-				// 残りは、半角カタカナを全角ひらがなに
-				char szBufZenHiragana[256] = "";
-				hankana2zenhira((unsigned char *)szBufCurrent.c_str(), (unsigned char *)szBufZenHiragana);
-				szBufZenHiragana[255] = NULL; // 下手な修正しても暴走しないよう念のため
-
-				string strZenHiragana = string(szBufZenHiragana);
-
-				// 改行的意味合いのものを特殊な記号に置き換える。高速化のため。
-				for (int i=0; OnigMatch(strZenHiragana, "^(.*?)\x0A(.+)", &matches) && i<(int)strZenHiragana.size(); i++ ) { 
-					// 列伝から要素を抽出する。
-					if ( !matches[1].empty() ) {
-						strZenHiragana = matches[1] + "<r><n>" + matches[2];
-					}
-				}
-
-				// 特殊な記号を、列伝エディタ上での見た目の改行へと変換。
-				for (int i=0; OnigMatch(strZenHiragana, "^(.*?)<r><n>(.+)", &matches) && i<(int)strZenHiragana.size(); i++ ) { 
-					// 列伝から要素を抽出する。
-					if ( !matches[1].empty() ) {
-						strZenHiragana = matches[1] + "\r\n" + matches[2];
-					}
-				}
-
-				strcpy(ctr.szRetsuden, strZenHiragana.c_str());
-				nest.push_back(ctr);
-
-				nestline = "";
-
-			}
-		}
-
-		// 複数城が１つにパックされたのを(１つかもしれないが)、全体リストへと追加する。
-		vCastleRetsudenInfoListData.push_back(nest);
-
-		return gcnew String(nest[0].szRetsuden);
-	}
-
-
-	// 列伝系のUnmanaged→Managedへと抽出。
-	String^ RetsudenAssignManagedDataSub(char *pUnmanagedLine) {
+	String^ RetsudenAssignManagedData(char *pUnmanagedLine) {
 
 		string szBufCurrent = string(pUnmanagedLine);
 
@@ -253,28 +152,28 @@ public:
 
 		Matches matches;
 		// 最後の終了記号以降は消す。
-		if ( OnigMatch(szBufCurrent, "^(.*?)\x05\x05\x05$", &matches) ) {
+		if (OnigMatch(szBufCurrent, "^(.*?)\x05\x05\x05$", &matches)) {
 
-			if ( !matches[1].empty() ) {
+			if (!matches[1].empty()) {
 				// 残りは、半角カタカナを全角ひらがなに
 				char szBufZenHiragana[256] = "";
-				hankana2zenhira((unsigned char *)matches[1].c_str(), (unsigned char *)szBufZenHiragana);
+				hankana2zenhira((unsigned char*)matches[1].c_str(), (unsigned char*)szBufZenHiragana);
 				szBufZenHiragana[255] = NULL; // 下手な修正しても暴走しないよう念のため
 
 				string strZenHiragana = string(szBufZenHiragana);
 
 				// 改行的意味合いのものを特殊な記号に置き換える。高速化のため。
-				for (int i=0; OnigMatch(strZenHiragana, "^(.*?)\n(.+)", &matches) && i<(int)strZenHiragana.size(); i++ ) { 
+				for (int i = 0; OnigMatch(strZenHiragana, "^(.*?)\n(.+)", &matches) && i < (int)strZenHiragana.size(); i++) {
 					// 列伝から要素を抽出する。
-					if ( !matches[1].empty() ) {
+					if (!matches[1].empty()) {
 						strZenHiragana = matches[1] + "<r><n>" + matches[2];
 					}
 				}
 
 				// 特殊な記号を、列伝エディタ上での見た目の改行へと変換。
-				for (int i=0; OnigMatch(strZenHiragana, "^(.*?)<r><n>(.+)", &matches) && i<(int)strZenHiragana.size(); i++ ) { 
+				for (int i = 0; OnigMatch(strZenHiragana, "^(.*?)<r><n>(.+)", &matches) && i < (int)strZenHiragana.size(); i++) {
 					// 列伝から要素を抽出する。
-					if ( !matches[1].empty() ) {
+					if (!matches[1].empty()) {
 						strZenHiragana = matches[1] + "\r\n" + matches[2];
 					}
 				}
@@ -284,6 +183,7 @@ public:
 
 		return gcnew String("");
 	}
+
 
 
 
@@ -346,7 +246,7 @@ public:
 						bytedata[datasize] = NULL; // 番兵
 						szBufCurrent = string(bytedata); 
 
-						String^ strRetsuden = RetsudenAssignManagedData( bytedata, ielem/2 ); // マネージドデータへと代入
+						String^ strRetsuden = RetsudenAssignManagedData(bytedata); // マネージドデータへと代入
 						lstStrRetsuden->Add( strRetsuden );
 
 						delete bytedata;

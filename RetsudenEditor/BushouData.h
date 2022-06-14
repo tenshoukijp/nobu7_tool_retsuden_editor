@@ -192,7 +192,7 @@ public:
 		int ivBufDecodedDataSize = vBufBushouDecodedData.size();
 
 		// 2番目～15番目が武将列伝 注意!!
-		for ( int ifile = 2;  ifile <= 15 && ifile <= (int)ivBufDecodedDataSize ; ifile++ ) {
+		for ( int ifile = 2; ifile <= 15 && ifile <= (int)ivBufDecodedDataSize ; ifile++ ) {
 
 			// ちょうど vSplittedData[0]=１番目の要素のデータ列、vSplittedData[1]=２番目の要素のデータ列、みたいな感じ
 			vector<vector<byte>> vSplittedData;
@@ -316,7 +316,7 @@ public:
 	BOOL AllSaveToBFileN6P() {
 
 		// 武将列伝の長さを満たしていなければ、ダメ
-		if (vBufBushouDecodedData.size() < 15) {
+		if (vBufBushouDecodedData.size() < 29) {
 			return FALSE;
 		}
 
@@ -335,6 +335,7 @@ public:
 		vBufBushouDecodedData[13].clear();
 		vBufBushouDecodedData[14].clear();
 		vBufBushouDecodedData[15].clear();
+		vBufBushouDecodedData[29].clear();
 
 		int iFileCnt = 14; // 仮想ファイル(メモリ上)を作るカウント数。１つあたり50個なので。
 
@@ -343,6 +344,8 @@ public:
 		for (int f = 0; f < iFileCnt; f++) {
 			MakeSplittedDataToJoindData( f*50, 2+f );
 		}
+
+		MakeSplittedDataToJoindData(700, 29);
 
 		// メモリ→パック化イメージ
 		int result = ls11_EncodePack( szBushouTargetFileName, NULL, &vBufBushouDecodedData );

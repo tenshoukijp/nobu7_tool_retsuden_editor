@@ -1,23 +1,2 @@
-﻿  CnvHankakuZenakaku.cpp
-  DotNetStringToMultiByte.cpp
-  LS11DotNet.cpp
-  main.cpp
-  ls11_decode.cpp
-  ls11_decodePack.cpp
-  ls11_encode.cpp
-  ls11_encodePack.cpp
-  ls11_getFileData.cpp
-  ls11_joinData.cpp
-  ls11_outFileData.cpp
-  ls11_splitData.cpp
-  OnigRegex.cpp
-  OutputDebugStream.cpp
-g:\repogitory_jp\nobu7_yool_retsuden_editor\retsudeneditor\native\ls11_decode.cpp(175): warning C4302: '型キャスト': 'const char *' から 'unsigned char' へ切り詰めます。
-g:\repogitory_jp\nobu7_yool_retsuden_editor\retsudeneditor\native\ls11_decode.cpp(184): warning C4302: '型キャスト': 'const char *' から 'unsigned char' へ切り詰めます。
-g:\repogitory_jp\nobu7_yool_retsuden_editor\retsudeneditor\native\ls11_splitdata.cpp(27): warning C4267: '引数': 'size_t' から '_Ty' に変換しました。データが失われているかもしれません。
-          with
-          [
-              _Ty=WORD
-          ]
-  .NETFramework,Version=v4.7.2.AssemblyAttributes.cpp
-  RetsudenEditor.vcxproj -> G:\repogitory_jp\nobu7_yool_retsuden_editor\Release\RetsudenEditor.exe
+﻿  main.cpp
+  RetsudenEditor.vcxproj -> G:\repogitory_jp\nobu7_tool_retsuden_editor\Release\RetsudenEditor.exe

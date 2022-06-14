@@ -96,6 +96,9 @@
     <ClInclude Include="DotNetTestToMultiByte.h">
       <Filter>ライブラリ\マネージ文字列⇒アンマネージ文字列</Filter>
     </ClInclude>
+    <ClInclude Include="HimeData.h">
+      <Filter>アプリ本体</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

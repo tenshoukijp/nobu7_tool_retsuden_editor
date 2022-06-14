@@ -1,6 +1,7 @@
 #pragma once;
 
 #include "BushouData.h"
+#include "HimeData.h"
 #include "KahouData.h"
 #include "CastleData.h"
 
@@ -47,6 +48,10 @@ public:
 		// 武将列伝のタブページ追加
 		tpBushou_Init();
 		Bushou_SetEventHander();
+
+		// 姫列伝のタブページ追加
+		tpHime_Init();
+		Hime_SetEventHander();
 
 		// 家宝列伝のタブページ追加
 		tpKahou_Init();
@@ -167,21 +172,21 @@ private:
 		tbBushouFullName->Left = 10;
 		tbBushouFullName->Width = 16 * 6 + 6;
 		tbBushouFullName->MaxLength = 37;
-		tbBushouFullName->BackColor = Color::FromArgb(0xD0, 0xD0, 0x90);
+		tbBushouFullName->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
 
 		tbBushouRubyYomi = gcnew TextBox();
 		tbBushouRubyYomi->Top = tbBushouFullName->Top;
 		tbBushouRubyYomi->Left = tbBushouFullName->Right;
 		tbBushouRubyYomi->MaxLength = 37;
 		tbBushouRubyYomi->Width = 16 * 5 + 6;
-		tbBushouRubyYomi->BackColor = Color::FromArgb(0xD0, 0xD0, 0x90);
+		tbBushouRubyYomi->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
 
 		tbBushouBornEtc  = gcnew TextBox();
 		tbBushouBornEtc->Top = tbBushouFullName->Top;
 		tbBushouBornEtc->Left = tbBushouRubyYomi->Right;
 		tbBushouBornEtc->Width = 16 * 5 + 8;
 		tbBushouBornEtc->MaxLength = 37;
-		tbBushouBornEtc->BackColor = Color::FromArgb(0xD0, 0xD0, 0x90);
+		tbBushouBornEtc->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
 
 		tbBushouRetsuden = gcnew TextBox();
 		tbBushouRetsuden->Top = tbBushouFullName->Bottom + 12;
@@ -191,7 +196,7 @@ private:
 		tbBushouRetsuden->MaxLength = 2 * 18 * 4;
 		tbBushouRetsuden->Multiline = true;
 		tbBushouRetsuden->WordWrap = false;
-		tbBushouRetsuden->BackColor = Color::FromArgb(0xD0, 0xD0, 0x90);
+		tbBushouRetsuden->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
 		
 
 		plBushouRetsuden->Controls->Add(tbBushouFullName);
@@ -590,6 +595,503 @@ private:
 	Button^ btnKahouDels; // 50枠追加
 
 
+
+
+//-----------------------------------------------武将列伝系
+
+private:
+	TabPage^ tpHime;
+	HimeData^ bdHimeData;
+
+	TextBox^ tbHimeSearch; // 武将検索
+	Button^ btnHimeSearch; // 検索ボタン
+	Button^ btnHimeImport; // 取込ボタン
+	OpenFileDialog^ ofdHimeImport;
+	Button^ btnHimeExport; // 出力ボタン
+	Button^ btnHimeAllSave; // 全て保存
+
+	ListBox^ lbHimeList; // 武将リストのコンボボックス
+	int iLastHimeListSelected;
+
+	Panel^ plHimeRetsuden;	 // 列伝情報用のパネル
+	TextBox^ tbHimeFullName; // 武将姓名のテキストボックス
+	TextBox^ tbHimeRubyYomi; // ふりがなのるび
+	TextBox^ tbHimeBornEtc;  // 生年などの情報
+	TextBox^ tbHimeRetsuden; // 列伝情報
+
+
+	// フォント
+	System::Drawing::Font^ fontHime;
+	ComboBox^ cbFontHime;	// フォントリスト
+
+	Button^ btnHimeAdds; // 50枠追加
+	Button^ btnHimeDels; // 50枠追加
+
+
+private:
+
+	void tpHime_Init() {
+
+		tpHime = gcnew TabPage();
+
+		tpHime->Text = "武将列伝";
+		tpHime->Size = tcRE->ClientSize;
+
+		// 武将検索
+		tbHimeSearch = gcnew TextBox();
+		tbHimeSearch->Width = 140;
+		tbHimeSearch->Height = 16;
+		tbHimeSearch->Left = 10;
+		tbHimeSearch->Top = 10;
+
+		// 検索ボタン
+		btnHimeSearch = gcnew Button();
+		btnHimeSearch->Text = "検索";
+		btnHimeSearch->Width = 60;
+		btnHimeSearch->Height = tbHimeSearch->Height;
+		btnHimeSearch->Left = tbHimeSearch->Right + 1;
+		btnHimeSearch->Top = tbHimeSearch->Top;
+
+		// 取込ボタン
+		btnHimeImport = gcnew Button();
+		btnHimeImport->Text = "単独取込";
+		btnHimeImport->Width = 70;
+		btnHimeImport->Height = tbHimeSearch->Height;
+		btnHimeImport->Left = btnHimeSearch->Right + 30;
+		btnHimeImport->Top = tbHimeSearch->Top;
+
+		// 出力ボタン
+		btnHimeExport = gcnew Button();
+		btnHimeExport->Text = "単独出力";
+		btnHimeExport->Width = 70;
+		btnHimeExport->Height = tbHimeSearch->Height;
+		btnHimeExport->Left = btnHimeImport->Right;
+		btnHimeExport->Top = tbHimeSearch->Top;
+
+		// 全て保存
+		btnHimeAllSave = gcnew Button();
+		btnHimeAllSave->Text = "全て保存";
+		btnHimeAllSave->Width = 70;
+		btnHimeAllSave->Height = tbHimeSearch->Height;
+		btnHimeAllSave->Left = tpHime->Right - (btnHimeAllSave->Width + 20);
+		btnHimeAllSave->Top = tbHimeSearch->Top;
+
+		// 武将知ると
+		lbHimeList = gcnew ListBox();
+		lbHimeList->Width = tbHimeSearch->Width;
+		lbHimeList->Left = tbHimeSearch->Left;
+		lbHimeList->Top = tbHimeSearch->Bottom + 10;
+		lbHimeList->Height = 200;
+
+		// 列伝情報用のパネル
+		plHimeRetsuden = gcnew Panel();
+		plHimeRetsuden->Top = lbHimeList->Top + 20;
+		Hime_SetPanelBackImg();
+		plHimeRetsuden->Left = tpHime->Right - (plHimeRetsuden->Width + 20);
+
+		tbHimeFullName = gcnew TextBox();
+		tbHimeFullName->Top = 10;
+		tbHimeFullName->Left = 10;
+		tbHimeFullName->Width = 16 * 6 + 6;
+		tbHimeFullName->MaxLength = 37;
+		tbHimeFullName->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
+
+		tbHimeRubyYomi = gcnew TextBox();
+		tbHimeRubyYomi->Top = tbHimeFullName->Top;
+		tbHimeRubyYomi->Left = tbHimeFullName->Right;
+		tbHimeRubyYomi->MaxLength = 37;
+		tbHimeRubyYomi->Width = 16 * 5 + 6;
+		tbHimeRubyYomi->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
+
+		tbHimeBornEtc = gcnew TextBox();
+		tbHimeBornEtc->Top = tbHimeFullName->Top;
+		tbHimeBornEtc->Left = tbHimeRubyYomi->Right;
+		tbHimeBornEtc->Width = 16 * 5 + 8;
+		tbHimeBornEtc->MaxLength = 37;
+		tbHimeBornEtc->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
+
+		tbHimeRetsuden = gcnew TextBox();
+		tbHimeRetsuden->Top = tbHimeFullName->Bottom + 12;
+		tbHimeRetsuden->Left = tbHimeFullName->Left;
+		tbHimeRetsuden->Height = 90;
+		tbHimeRetsuden->Width = 312;
+		tbHimeRetsuden->MaxLength = 2 * 18 * 4;
+		tbHimeRetsuden->Multiline = true;
+		tbHimeRetsuden->WordWrap = false;
+		tbHimeRetsuden->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
+
+
+		plHimeRetsuden->Controls->Add(tbHimeFullName);
+		plHimeRetsuden->Controls->Add(tbHimeRubyYomi);
+		plHimeRetsuden->Controls->Add(tbHimeBornEtc);
+		plHimeRetsuden->Controls->Add(tbHimeRetsuden);
+
+		// フォントリスト
+		cbFontHime = gcnew ComboBox();
+		cbFontHime->Width = 100;
+		cbFontHime->Left = tpHime->Right - (cbFontHime->Width + 20);
+		cbFontHime->Top = plHimeRetsuden->Bottom + 10;
+		cbFontHime->Height = tbHimeSearch->Height;
+		Hime_GetValidTenshoukiFontList();
+
+		Hime_cbFont_SelectedIndexChanged(nullptr, nullptr);
+
+		/*
+		// 武将枠50人追加
+		btnHimeAdds = gcnew Button();
+		btnHimeAdds->Text = "50枠追加";
+		btnHimeAdds->Width = 70;
+		btnHimeAdds->Height = tbHimeSearch->Height;
+		btnHimeAdds->Left = tbHimeSearch->Left;
+		btnHimeAdds->Top = lbHimeList->Bottom + 10;
+
+		// 武将枠50人削除
+		btnHimeDels = gcnew Button();
+		btnHimeDels->Text = "50枠削除";
+		btnHimeDels->Width = 70;
+		btnHimeDels->Height = tbHimeSearch->Height;
+		btnHimeDels->Left = btnHimeAdds->Right;
+		btnHimeDels->Top = lbHimeList->Bottom + 10;
+		*/
+
+		// 武将列伝のタブにコンポーネント追加
+		tpHime->Controls->Add(tbHimeSearch);
+		tpHime->Controls->Add(btnHimeSearch);
+		// tpHime->Controls->Add(btnHimeImport);
+		// tpHime->Controls->Add(btnHimeExport);
+		tpHime->Controls->Add(btnHimeAllSave);
+		tpHime->Controls->Add(lbHimeList);
+		tpHime->Controls->Add(plHimeRetsuden);
+		tpHime->Controls->Add(cbFontHime);
+		// tpHime->Controls->Add(btnHimeAdds);
+		// tpHime->Controls->Add(btnHimeDels);
+
+		// タブをフォームに追加
+		tcRE->TabPages->Add(tpHime);
+
+		// 武将データを作成して、リストに流しこむ
+		bdHimeData = gcnew HimeData();
+		// リストボックスに足し込み
+		for (int i = 0; i < bdHimeData->lstStrFullName->Count; i++) {
+			String^ strLine = String::Format("{0:0000} - {1}", i, bdHimeData->lstStrFullName[i]);
+			lbHimeList->Items->Add(strLine);
+		}
+
+		// 最初のものを選択しておく
+		lbHimeList->SelectedIndex = 0;
+		iLastHimeListSelected = 0;
+
+		// 武将データ→テキストボックス
+		Hime_BDataToTextBox();
+		Hime_TextBoxWidthUpdate();
+	}
+
+	// パネルの背景画像設定
+	void Hime_SetPanelBackImg() {
+		// このプロジェクトのアセンブリのタイプを取得。
+		System::Reflection::Assembly^ prj_assebmly = GetType()->Assembly;
+		System::Resources::ResourceManager^ r = gcnew System::Resources::ResourceManager(String::Format("{0}.RetsudenEditorRes", prj_assebmly->GetName()->Name), prj_assebmly);
+
+		// パネルの背景
+		plHimeRetsuden->BackgroundImage = (System::Drawing::Image^)(r->GetObject("retsuden_back"));
+		// 背景画像の大きさにパネルの大きさを合わせる
+		plHimeRetsuden->Size = plHimeRetsuden->BackgroundImage->Size;
+
+	}
+
+	// 各種ＧＵＩのイベントハンドラ設定
+	void Hime_SetEventHander() {
+		btnHimeSearch->Click += gcnew EventHandler(this, &RetsudenEditorForm::Hime_btnSearch_Click);
+		btnHimeImport->Click += gcnew EventHandler(this, &RetsudenEditorForm::Hime_btnImport_Click);
+		btnHimeExport->Click += gcnew EventHandler(this, &RetsudenEditorForm::Hime_btnExport_Click);
+		btnHimeAllSave->Click += gcnew EventHandler(this, &RetsudenEditorForm::Hime_btnAllSave_Click);
+		tbHimeSearch->KeyDown += gcnew KeyEventHandler(this, &RetsudenEditorForm::Hime_tbSearch_KeyDown);
+		lbHimeList->SelectedIndexChanged += gcnew EventHandler(this, &RetsudenEditorForm::Hime_lbHimeList_SelectedIndexChanged);
+		tbHimeFullName->TextChanged += gcnew EventHandler(this, &RetsudenEditorForm::Hime_tbFullName_TextChanged);
+		tbHimeRubyYomi->TextChanged += gcnew EventHandler(this, &RetsudenEditorForm::Hime_tbRubyYomi_TextChanged);
+		tbHimeBornEtc->TextChanged += gcnew EventHandler(this, &RetsudenEditorForm::Hime_tbBornEtc_TextChanged);
+		tbHimeRetsuden->TextChanged += gcnew EventHandler(this, &RetsudenEditorForm::Hime_tbRetsuden_TextChanged);
+		tbHimeFullName->Leave += gcnew EventHandler(this, &RetsudenEditorForm::Hime_textBox_Leave);
+		tbHimeRubyYomi->Leave += gcnew EventHandler(this, &RetsudenEditorForm::Hime_textBox_Leave);
+		tbHimeBornEtc->Leave += gcnew EventHandler(this, &RetsudenEditorForm::Hime_textBox_Leave);
+		tbHimeRetsuden->Leave += gcnew EventHandler(this, &RetsudenEditorForm::Hime_textBox_Leave);
+		cbFontHime->SelectedIndexChanged += gcnew EventHandler(this, &RetsudenEditorForm::Hime_cbFont_SelectedIndexChanged);
+		// btnHimeAdds->Click += gcnew EventHandler(this, &RetsudenEditorForm::Hime_btnAddHimes_Click);
+		// btnHimeDels->Click += gcnew EventHandler(this, &RetsudenEditorForm::Hime_btnDelHimes_Click);
+	}
+
+	// 武将検索ボタンを押した時
+	void Hime_btnSearch_Click(Object^ sender, EventArgs^ e) {
+		if (tbHimeSearch->Text == "") { return; } // テキストエリアが空っぽなら何もしない。
+
+		int iStart = GetHimeCBSelectedIndex() + 1; // 現在選択しているもののから次の候補
+
+		Regex^ regex = gcnew Regex(tbHimeSearch->Text);
+
+		bool isExist = false;
+		// iStart以降を全部サーチして、
+		for (int i = iStart; i < lbHimeList->Items->Count; i++) {
+			Match^ match = regex->Match((String^)lbHimeList->Items[i]);
+
+			if (match->Success) {
+				lbHimeList->SelectedIndex = i;
+				isExist = true;
+				break;
+			}
+		}
+
+		if (!isExist) {
+			for (int i = 0; i < iStart; i++) {
+				Match^ match = regex->Match((String^)lbHimeList->Items[i]);
+
+				if (match->Success) {
+					lbHimeList->SelectedIndex = i;
+					break;
+				}
+			}
+		}
+	}
+
+	// 武将検索テキストボックスでキーを押した時
+	void Hime_tbSearch_KeyDown(Object^ sender, KeyEventArgs^ e) {
+		if (e->KeyCode == Keys::Return) {
+			Hime_btnSearch_Click(sender, e);
+		}
+		if (e->KeyCode == Keys::F3) {
+			Hime_btnSearch_Click(sender, e);
+		}
+	}
+
+	// 武将出力ボタンを押した時
+	void Hime_btnExport_Click(Object^ sender, EventArgs^ e) {
+		int iSelectedIndex = GetHimeCBSelectedIndex();
+		std::string unmanagedData = bdHimeData->GetOneHimeExportData(iSelectedIndex);
+
+		std::string filepath = DotNetStringToMultiByte(bdHimeData->lstStrFullName[iSelectedIndex]);
+		if (filepath == "") { filepath = "ななし"; }
+		filepath += ".n6b";
+
+		FILE* fp = fopen(filepath.c_str(), "wb");
+		if (fp) {
+			fwrite(unmanagedData.c_str(), unmanagedData.size(), 1, fp);
+			fclose(fp);
+			System::Windows::Forms::MessageBox::Show("データを出力しました。", "完了", ::MessageBoxButtons::OK, ::MessageBoxIcon::Information);
+		}
+		else {
+			System::Windows::Forms::MessageBox::Show("データの出力に失敗しました。", "エラー", MessageBoxButtons::OK, ::MessageBoxIcon::Error);
+
+		}
+	}
+
+
+	// 武将入力ボタンを押した時
+	void Hime_btnImport_Click(Object^ sender, EventArgs^ e) {
+
+		ofdHimeImport = gcnew OpenFileDialog();
+
+		ofdHimeImport->InitialDirectory = "."; // ツールと同じディレクトリがデフォルト
+
+		ofdHimeImport->Filter = "天翔記武将列伝ファイル(*.n6b)|*.n6b";
+
+		ofdHimeImport->FilterIndex = 1;
+
+		ofdHimeImport->Title = "とある武将の列伝ファイルを選択してください";
+
+		//ダイアログボックスを閉じる前に現在のディレクトリを復元するようにする
+		ofdHimeImport->RestoreDirectory = true;
+
+		//ダイアログを表示する
+		if (ofdHimeImport->ShowDialog() == ::DialogResult::OK) {
+			//OKボタンがクリックされたとき
+			if (ofdHimeImport->FileName) {
+				BOOL success = bdHimeData->GetOneHimeImportData(ofdHimeImport->FileName, GetHimeCBSelectedIndex());
+
+				//　成否にかかわらず更新
+				Hime_BDataToTextBox();
+			}
+		}
+	}
+
+	// 全て保存ボタンを押した時
+	void Hime_btnAllSave_Click(Object^ sender, EventArgs^ e) {
+		bdHimeData->AllSaveToBFileN6P();
+	}
+
+	// フォントリストの選択項目が変更された時
+	void Hime_cbFont_SelectedIndexChanged(Object^ sender, EventArgs^ e) {
+		// フォントの設定
+		fontHime = gcnew System::Drawing::Font((String^)cbFontHime->Items[cbFontHime->SelectedIndex], 12, FontStyle::Regular);
+		tbHimeFullName->Font = fontHime;
+		tbHimeRubyYomi->Font = fontHime;
+		tbHimeBornEtc->Font = fontHime;
+		tbHimeRetsuden->Font = fontHime;
+	}
+
+	// インストールされているフォントにしたがって、フォントリストボックスに追加
+	void Hime_GetValidTenshoukiFontList() {
+
+		//InstalledFontCollectionオブジェクトの取得
+		System::Drawing::Text::InstalledFontCollection^ ifc = gcnew System::Drawing::Text::InstalledFontCollection();
+
+		//インストールされているすべてのフォントファミリアを取得
+		cli::array<FontFamily^>^ ffs = ifc->Families;
+
+		//ここでは候補となりえるフォント名のみ
+		for (int i = 0; i < aryStrFontCandidate->Length; i++) {
+
+			// フォントリスト
+			for each (FontFamily ^ ff in ffs) {
+
+				// 候補フォントがあった。
+				if (ff->Name == aryStrFontCandidate[i]) {
+					// コンボボックスに追加
+					cbFontHime->Items->Add(ff->Name);
+				}
+			}
+		}
+
+		// １つ以上フォントがあったら、最初のものを選択しておく。
+		if (cbFontHime->Items->Count > 0) {
+			cbFontHime->SelectedIndex = 0;
+		}
+	}
+
+	int GetHimeCBSelectedIndex() {
+		int iSelectedIndex = lbHimeList->SelectedIndex;
+		if (0 <= iSelectedIndex && iSelectedIndex < lbHimeList->Items->Count) {
+			return iSelectedIndex;
+		}
+		else {
+			return 0;
+		}
+	}
+	void ModifyCBHimeSelectedIndex() {
+		// 焦点を見失っているようなら、最後に選択していたものを宛がう。
+		int iSelectIndex = GetHimeCBSelectedIndex();
+		if (iSelectIndex == 0xFFFFFFFF) {
+			lbHimeList->SelectedIndex = iLastHimeListSelected;
+		}
+		else {
+			iLastHimeListSelected = iSelectIndex;
+		}
+	}
+
+
+	// 武将リストを選択変更すると、画像の上の列伝各種の値が入れ替わる
+	void Hime_lbHimeList_SelectedIndexChanged(Object^ sender, EventArgs^ e) {
+		ModifyCBHimeSelectedIndex();
+		// 新たなindexのデータを取得。
+		Hime_BDataToTextBox();
+
+		ModifyCBHimeSelectedIndex();
+	}
+
+
+	// 武将データ→テキストボックスへ転写
+	void Hime_BDataToTextBox() {
+		int iSelectedIndex = GetHimeCBSelectedIndex();
+		tbHimeFullName->Text = bdHimeData->lstStrFullName[iSelectedIndex];
+		tbHimeRubyYomi->Text = bdHimeData->lstStrRubyYomi[iSelectedIndex];
+		tbHimeBornEtc->Text = bdHimeData->lstStrBornEtc[iSelectedIndex];
+		tbHimeRetsuden->Text = bdHimeData->lstStrRetsuden[iSelectedIndex];
+	}
+
+	// テキストボックスの位置や幅を中身のテキスト量に従って変更
+	void Hime_TextBoxWidthUpdate() {
+		tbHimeFullName->Width = GetStringMeasure(tbHimeFullName->Text);
+
+		tbHimeRubyYomi->Left = tbHimeFullName->Right + 8;
+		tbHimeRubyYomi->Width = GetStringMeasure(tbHimeRubyYomi->Text);
+
+		tbHimeBornEtc->Left = tbHimeRubyYomi->Right + 8;
+		tbHimeBornEtc->Width = GetStringMeasure(tbHimeBornEtc->Text);
+	}
+
+	// テキストボックスの、「武将姓名」が変更された。
+	void Hime_tbFullName_TextChanged(Object^ sender, EventArgs^ e) {
+		int iSelectedIndex = GetHimeCBSelectedIndex();
+		bdHimeData->lstStrFullName[iSelectedIndex] = tbHimeFullName->Text;
+		String^ strLine = String::Format("{0:0000} - {1}", iSelectedIndex, tbHimeFullName->Text);
+		// SelectIndexChangeが反応しないようにする。
+		lbHimeList->SelectedIndexChanged -= gcnew EventHandler(this, &RetsudenEditorForm::Hime_lbHimeList_SelectedIndexChanged);
+
+		// 反応しないようにしたので、値を書き換える。SelectedIndexChangeメソッドが反応しないのでエラーが起きない。
+
+		lbHimeList->Items[iSelectedIndex] = gcnew String(strLine); // 武将リストの名前の方を更新
+
+		Hime_TextBoxWidthUpdate();
+
+		// 更新したので、反応を戻す。
+		// SelectIndexChangeが反応するようにする。
+		lbHimeList->SelectedIndexChanged += gcnew EventHandler(this, &RetsudenEditorForm::Hime_lbHimeList_SelectedIndexChanged);
+	}
+
+	// テキストボックスの、「ふりがな」が変更された。
+	void Hime_tbRubyYomi_TextChanged(Object^ sender, EventArgs^ e) {
+		int iSelectedIndex = GetHimeCBSelectedIndex();
+		bdHimeData->lstStrRubyYomi[iSelectedIndex] = tbHimeRubyYomi->Text;
+		Hime_TextBoxWidthUpdate();
+	}
+
+	// テキストボックスの、「生年等」が変更された。
+	void Hime_tbBornEtc_TextChanged(Object^ sender, EventArgs^ e) {
+		int iSelectedIndex = GetHimeCBSelectedIndex();
+		bdHimeData->lstStrBornEtc[iSelectedIndex] = tbHimeBornEtc->Text;
+		Hime_TextBoxWidthUpdate();
+	}
+
+	// テキストボックスの、「列伝」が変更された。
+	void Hime_tbRetsuden_TextChanged(Object^ sender, EventArgs^ e) {
+		int iSelectedIndex = GetHimeCBSelectedIndex();
+
+		bdHimeData->lstStrRetsuden[iSelectedIndex] = tbHimeRetsuden->Text;
+	}
+
+	// テキストボックスから去った
+	void Hime_textBox_Leave(Object^ sender, EventArgs^ e) {
+	}
+
+
+	// 50枠追加ボタン
+	void Hime_btnAddHimes_Click(Object^ sender, EventArgs^ e) {
+		int iStart = lbHimeList->Items->Count;
+		for (int i = iStart; i < iStart + 50; i++) {
+			String^ bname = String::Format("登録{0:0000}", i);
+			// 先に元データから増やす
+			bdHimeData->lstStrFullName->Add(bname);
+			bdHimeData->lstStrRubyYomi->Add("ﾄｳﾛｸ" + i);
+			bdHimeData->lstStrBornEtc->Add("????～????");
+			bdHimeData->lstStrRetsuden->Add("未入力");
+			String^ strLine = String::Format("{0:0000} - {1}", i, bname);
+			lbHimeList->Items->Add(strLine);
+		}
+
+	}
+
+	// 50枠削除ボタン
+	void Hime_btnDelHimes_Click(Object^ sender, EventArgs^ e) {
+
+		int iStart = lbHimeList->Items->Count - 1;
+
+		// 選択インデックスが削除予定の所にあったら、ギリギリのところまで退避
+		if (GetHimeCBSelectedIndex() > iStart - 50) {
+			lbHimeList->SelectedIndex = iStart - 50;
+		}
+
+		for (int i = iStart; i > iStart - 50; i--) {
+			// 先に武将リストからカット
+			lbHimeList->Items->RemoveAt(i);
+
+			// 次いで元データを減らす
+			bdHimeData->lstStrFullName->RemoveAt(i);
+			bdHimeData->lstStrRubyYomi->RemoveAt(i);
+			bdHimeData->lstStrBornEtc->RemoveAt(i);
+			bdHimeData->lstStrRetsuden->RemoveAt(i);
+		}
+	}
+
+
+
 private:
 
 	void tpKahou_Init() {
@@ -658,21 +1160,21 @@ private:
 		tbKahouFullName->Left = 10;
 		tbKahouFullName->Width = 16 * 6 + 6;
 		tbKahouFullName->MaxLength = 37;
-		tbKahouFullName->BackColor = Color::FromArgb(0xD0, 0xD0, 0x90);
+		tbKahouFullName->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
 
 		tbKahouRubyYomi = gcnew TextBox();
 		tbKahouRubyYomi->Top = tbKahouFullName->Top;
 		tbKahouRubyYomi->Left = tbKahouFullName->Right;
 		tbKahouRubyYomi->MaxLength = 37;
 		tbKahouRubyYomi->Width = 16 * 5 + 6;
-		tbKahouRubyYomi->BackColor = Color::FromArgb(0xD0, 0xD0, 0x90);
+		tbKahouRubyYomi->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
 
 		tbKahouBornEtc  = gcnew TextBox();
 		tbKahouBornEtc->Top = tbKahouFullName->Top;
 		tbKahouBornEtc->Left = tbKahouRubyYomi->Right;
 		tbKahouBornEtc->Width = 16 * 5 + 8;
 		tbKahouBornEtc->MaxLength = 37;
-		tbKahouBornEtc->BackColor = Color::FromArgb(0xD0, 0xD0, 0x90);
+		tbKahouBornEtc->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
 
 		tbKahouRetsuden = gcnew TextBox();
 		tbKahouRetsuden->Top = tbKahouFullName->Bottom + 12;
@@ -682,7 +1184,7 @@ private:
 		tbKahouRetsuden->MaxLength = 2 * 18 * 4;
 		tbKahouRetsuden->Multiline = true;
 		tbKahouRetsuden->WordWrap = false;
-		tbKahouRetsuden->BackColor = Color::FromArgb(0xD0, 0xD0, 0x90);
+		tbKahouRetsuden->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
 		
 
 		plKahouRetsuden->Controls->Add(tbKahouFullName);
@@ -1077,21 +1579,21 @@ private:
 		tbCastleFullName->Left = 10;
 		tbCastleFullName->Width = 16 * 6 + 6;
 		tbCastleFullName->MaxLength = 37;
-		tbCastleFullName->BackColor = Color::FromArgb(0xD0, 0xD0, 0x90);
+		tbCastleFullName->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
 
 		tbCastleRubyYomi = gcnew TextBox();
 		tbCastleRubyYomi->Top = tbCastleFullName->Top;
 		tbCastleRubyYomi->Left = tbCastleFullName->Right;
 		tbCastleRubyYomi->MaxLength = 37;
 		tbCastleRubyYomi->Width = 16 * 5 + 6;
-		tbCastleRubyYomi->BackColor = Color::FromArgb(0xD0, 0xD0, 0x90);
+		tbCastleRubyYomi->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
 
 		tbCastleBornEtc = gcnew TextBox();
 		tbCastleBornEtc->Top = tbCastleFullName->Top;
 		tbCastleBornEtc->Left = tbCastleRubyYomi->Right;
 		tbCastleBornEtc->Width = 16 * 5 + 8;
 		tbCastleBornEtc->MaxLength = 37;
-		tbCastleBornEtc->BackColor = Color::FromArgb(0xD0, 0xD0, 0x90);
+		tbCastleBornEtc->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
 
 		tbCastleRetsuden = gcnew TextBox();
 		tbCastleRetsuden->Top = tbCastleFullName->Bottom + 12;
@@ -1101,7 +1603,7 @@ private:
 		tbCastleRetsuden->MaxLength = 2 * 18 * 4;
 		tbCastleRetsuden->Multiline = true;
 		tbCastleRetsuden->WordWrap = false;
-		tbCastleRetsuden->BackColor = Color::FromArgb(0xD0, 0xD0, 0x90);
+		tbCastleRetsuden->BackColor = Color::FromArgb(0xD0, 0xD0, 0xFA);
 
 
 		plCastleRetsuden->Controls->Add(tbCastleFullName);

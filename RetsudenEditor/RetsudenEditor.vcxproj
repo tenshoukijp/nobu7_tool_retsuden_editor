@@ -119,6 +119,7 @@
     <ClInclude Include="CastleData.h" />
     <ClInclude Include="CnvHankakuZenkaku.h" />
     <ClInclude Include="DotNetTestToMultiByte.h" />
+    <ClInclude Include="HimeData.h" />
     <ClInclude Include="KahouData.h" />
     <ClInclude Include="LS11DotNet.h" />
     <ClInclude Include="Native\ls11_lib.h" />
