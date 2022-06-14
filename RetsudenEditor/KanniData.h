@@ -17,6 +17,8 @@ using namespace System::Collections::Generic;
 using namespace System::Windows::Forms;
 using namespace System::Text::RegularExpressions;
 
+const int iKanniIndexBgn = 36;
+const int iKanniIndexEnd = 40;
 
 char* szKanniTargetFileName = "message.nb7";
 
@@ -190,7 +192,7 @@ public:
 		int ivBufDecodedDataSize = vBufKanniDecodedData.size();
 
 		// 1番目からスタートしている!! 注意!!
-		for (int ifile = 36; ifile <= 40 && ifile < (int)ivBufDecodedDataSize; ifile++) {
+		for (int ifile = iKanniIndexBgn; ifile <= iKanniIndexEnd && ifile < (int)ivBufDecodedDataSize; ifile++) {
 
 			// ちょうど vSplittedData[0]=１番目の要素のデータ列、vSplittedData[1]=２番目の要素のデータ列、みたいな感じ
 			vector<vector<byte>> vSplittedData;
@@ -315,22 +317,22 @@ public:
 
 	BOOL AllSaveToMessageN6P() {
 		// 家宝列伝の長さを満たしていなければ、ダメ
-		if (vBufKanniDecodedData.size() < 40) {
+		if (vBufKanniDecodedData.size() < iKanniIndexEnd) {
 			return FALSE;
 		}
 		// 家宝列伝が入っている３つの所をクリア。
-		vBufKanniDecodedData[36].clear();
+		vBufKanniDecodedData[iKanniIndexBgn].clear();
 		vBufKanniDecodedData[37].clear();
 		vBufKanniDecodedData[38].clear();
 		vBufKanniDecodedData[39].clear();
-		vBufKanniDecodedData[40].clear();
+		vBufKanniDecodedData[iKanniIndexEnd].clear();
 
 		// 家宝列伝全てについて･･･
-		int iFileCnt = 5; // 仮想ファイル(メモリ上)を作るカウント数。１つあたり50個なので。
+		int iFileCnt = iKanniIndexEnd - iKanniIndexBgn + 1; // 作成するファイル数(36,37,38,39,40)
 
 		// それぞれの家宝番号の開始番号を送りながら、仮想ファイルファイル分繰り返す。vBufKanniDecodedData に付け加えられてゆく。
 		for (int f = 0; f < iFileCnt; f++) {
-			MakeSplittedDataToJoindData(f * 50, 36 + f);
+			MakeSplittedDataToJoindData(f * 50, iKanniIndexBgn + f);
 		}
 
 		// メモリ→パック化イメージ

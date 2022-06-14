@@ -17,6 +17,9 @@ using namespace System::Collections::Generic;
 using namespace System::Windows::Forms;
 using namespace System::Text::RegularExpressions;
 
+const int iBushouIndexBgn = 2;
+const int iBushouIndexEnd = 15;
+
 
 char *szBushouTargetFileName = "message.nb7";
 
@@ -192,7 +195,7 @@ public:
 		int ivBufDecodedDataSize = vBufBushouDecodedData.size();
 
 		// 2番目～15番目が武将列伝 注意!!
-		for ( int ifile = 2; ifile <= 15 && ifile <= (int)ivBufDecodedDataSize ; ifile++ ) {
+		for ( int ifile = iBushouIndexBgn; ifile <= iBushouIndexEnd && ifile <= (int)ivBufDecodedDataSize ; ifile++ ) {
 
 			// ちょうど vSplittedData[0]=１番目の要素のデータ列、vSplittedData[1]=２番目の要素のデータ列、みたいな感じ
 			vector<vector<byte>> vSplittedData;
@@ -316,12 +319,12 @@ public:
 	BOOL AllSaveToBFileN6P() {
 
 		// 武将列伝の長さを満たしていなければ、ダメ
-		if (vBufBushouDecodedData.size() < 29) {
+		if (vBufBushouDecodedData.size() < iBushouIndexEnd) {
 			return FALSE;
 		}
 
 		// 武将列伝が入っている所をクリア。
-		vBufBushouDecodedData[2].clear();
+		vBufBushouDecodedData[iBushouIndexBgn].clear();
 		vBufBushouDecodedData[3].clear();
 		vBufBushouDecodedData[4].clear();
 		vBufBushouDecodedData[5].clear();
@@ -334,18 +337,15 @@ public:
 		vBufBushouDecodedData[12].clear();
 		vBufBushouDecodedData[13].clear();
 		vBufBushouDecodedData[14].clear();
-		vBufBushouDecodedData[15].clear();
-		vBufBushouDecodedData[29].clear();
+		vBufBushouDecodedData[iBushouIndexEnd].clear();
 
-		int iFileCnt = 14; // 仮想ファイル(メモリ上)を作るカウント数。１つあたり50個なので。
+		int iFileCnt = iBushouIndexEnd - iBushouIndexBgn + 1; // 2,3, ... 15 の個数
 
 		// それぞれの武将番号の開始番号を送りながら、仮想ファイルファイル分繰り返す。vBufBushouDecodedData に付け加えられてゆく。
 		// 2番目～15番目が武将列伝 注意!!
 		for (int f = 0; f < iFileCnt; f++) {
-			MakeSplittedDataToJoindData( f*50, 2+f );
+			MakeSplittedDataToJoindData( f*50, iBushouIndexBgn +f );
 		}
-
-		MakeSplittedDataToJoindData(700, 29);
 
 		// メモリ→パック化イメージ
 		int result = ls11_EncodePack( szBushouTargetFileName, NULL, &vBufBushouDecodedData );

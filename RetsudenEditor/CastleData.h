@@ -17,6 +17,9 @@ using namespace System::Collections::Generic;
 using namespace System::Windows::Forms;
 using namespace System::Text::RegularExpressions;
 
+const int iCastleIndexBgn = 30;
+const int iCastleIndexEnd = 31;
+
 
 char *szCastleTargetFileName = "message.nb7";
 
@@ -202,7 +205,7 @@ public:
 		int ivBufDecodedDataSize = vBufCastleDecodedData.size();
 
 		// 18番目からスタートしている!! 注意!!
-		for ( int ifile = 30; ifile <= 31 && ifile < (int)ivBufDecodedDataSize ; ifile++ ) {
+		for ( int ifile = iCastleIndexBgn; ifile <= iCastleIndexEnd && ifile < (int)ivBufDecodedDataSize ; ifile++ ) {
 
 			// ちょうど vSplittedData[0]=１番目の要素のデータ列、vSplittedData[1]=２番目の要素のデータ列、みたいな感じ
 			vector<vector<byte>> vSplittedData;
@@ -281,19 +284,19 @@ public:
 
 	BOOL AllSaveToMessageN6P() {
 		// 城列伝の長さを満たしていなければ、ダメ
-		if ( vBufCastleDecodedData.size() < 31 ) {
+		if ( vBufCastleDecodedData.size() < iCastleIndexEnd) {
 			return FALSE;
 		}
 		// 城列伝が入っている３つの所をクリア。
-		vBufCastleDecodedData[30].clear(); 
-		vBufCastleDecodedData[31].clear(); 
+		vBufCastleDecodedData[iCastleIndexBgn].clear();
+		vBufCastleDecodedData[iCastleIndexEnd].clear();
 
 		// 城列伝全てについて･･･
-		int iFileCnt = 2; // 仮想ファイル(メモリ上)を作るカウント数。１つあたり50個なので。
+		int iFileCnt = iCastleIndexEnd - iCastleIndexBgn + 1; // 31, 32 の数 = 2個
 
 		// それぞれの城番号の開始番号を送りながら、仮想ファイルファイル分繰り返す。vBufCastleDecodedData に付け加えられてゆく。
 		for ( int f=0; f<iFileCnt; f++) {
-			MakeSplittedDataToJoindData( f*50, 30+f );
+			MakeSplittedDataToJoindData( f*50, iCastleIndexBgn +f );
 		}
 
 		// メモリ→パック化イメージ

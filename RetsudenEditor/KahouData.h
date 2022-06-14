@@ -17,6 +17,9 @@ using namespace System::Collections::Generic;
 using namespace System::Windows::Forms;
 using namespace System::Text::RegularExpressions;
 
+const int iKahouIndexBgn = 32;
+const int iKahouIndexEnd = 35;
+
 
 char *szKahouTargetFileName = "message.nb7";
 
@@ -190,7 +193,7 @@ public:
 		int ivBufDecodedDataSize = vBufKahouDecodedData.size();
 
 		// 1番目からスタートしている!! 注意!!
-		for ( int ifile = 32; ifile <= 35 && ifile < (int)ivBufDecodedDataSize ; ifile++ ) {
+		for ( int ifile = iKahouIndexBgn; ifile <= iKahouIndexEnd && ifile < (int)ivBufDecodedDataSize ; ifile++ ) {
 
 			// ちょうど vSplittedData[0]=１番目の要素のデータ列、vSplittedData[1]=２番目の要素のデータ列、みたいな感じ
 			vector<vector<byte>> vSplittedData;
@@ -313,21 +316,21 @@ public:
 
 	BOOL AllSaveToMessageN6P() {
 		// 家宝列伝の長さを満たしていなければ、ダメ
-		if ( vBufKahouDecodedData.size() < 33 ) {
+		if ( vBufKahouDecodedData.size() < iKahouIndexEnd) {
 			return FALSE;
 		}
 		// 家宝列伝が入っている３つの所をクリア。
-		vBufKahouDecodedData[32].clear(); 
+		vBufKahouDecodedData[iKahouIndexBgn].clear();
 		vBufKahouDecodedData[33].clear(); 
 		vBufKahouDecodedData[34].clear(); 
-		vBufKahouDecodedData[35].clear();
+		vBufKahouDecodedData[iKahouIndexEnd].clear();
 
 		// 家宝列伝全てについて･･･
-		int iFileCnt = 4; // 仮想ファイル(メモリ上)を作るカウント数。１つあたり50個なので。
+		int iFileCnt = iKahouIndexEnd - iKahouIndexBgn + 1; // 作成するファイル数。32, 33, 34, 35 の４つ。
 
 		// それぞれの家宝番号の開始番号を送りながら、仮想ファイルファイル分繰り返す。vBufKahouDecodedData に付け加えられてゆく。
 		for ( int f=0; f<iFileCnt; f++) {
-			MakeSplittedDataToJoindData( f*50, 32+f );
+			MakeSplittedDataToJoindData( f*50, iKahouIndexBgn+f );
 		}
 
 		// メモリ→パック化イメージ

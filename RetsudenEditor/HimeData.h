@@ -9,6 +9,8 @@
 #include "ls11_mod.h"
 #include "DotNetTestToMultiByte.h"
 
+const int iHimeIndexBgn = 29;
+const int iHimeIndexEnd = 29;
 
 using namespace System;
 using namespace System::Text;
@@ -23,6 +25,7 @@ char* szHimeTargetFileName = "message.nb7";
 // ちょうど vBufHimeDecodedData[0]=１番目の分割ファイルのデータ列、vBufHimeDecodedData[1]=２番目の分割ファイルのデータ列、みたいな感じ
 vector<vector<byte>> vBufHimeDecodedData;
 
+vector<vector<byte>> vBufHimeSplittedData;
 
 ref class HimeData {
 public:
@@ -191,59 +194,63 @@ public:
 		// デコードしたデータの(内部的)ファイルでまわしていく。0番は対象ではない。武将データは2番から。
 		int ivBufDecodedDataSize = vBufHimeDecodedData.size();
 
-		// 2番目～15番目が武将列伝 注意!!
-		for (int ifile = 29; ifile <= 29 && ifile <= (int)ivBufDecodedDataSize; ifile++) {
+		// 29番目が姫列伝 注意!!
+		int ifile = iHimeIndexBgn;
 
-			// ちょうど vSplittedData[0]=１番目の要素のデータ列、vSplittedData[1]=２番目の要素のデータ列、みたいな感じ
-			vector<vector<byte>> vSplittedData;
+		// ちょうど vSplittedData[0]=１番目の要素のデータ列、vSplittedData[1]=２番目の要素のデータ列、みたいな感じ
+		vector<vector<byte>> vSplittedData;
 
-			ls11_SplitData(vBufHimeDecodedData[ifile], &vSplittedData);
+		ls11_SplitData(vBufHimeDecodedData[ifile], &vSplittedData);
 
-			int ivSplittedDataSize = vSplittedData.size();
+		int ivSplittedDataSize = vSplittedData.size();
 
-			// 各要素ごとに･･･ まず名前、読み仮名 生没年の類
-			for (int ielem = 0; ielem < (int)ivSplittedDataSize && ielem < 24; ielem++) {
-				if (ielem % 2 == 0) { iRetsudenNo++; }
+		vBufHimeSplittedData.clear();
+		for (auto tmp : vSplittedData) {
+			vBufHimeSplittedData.push_back(tmp);
+		}
 
-				if (iRetsudenNo < 0) { iRetsudenNo = 0; }; // 最悪のための番兵
+		// 各要素ごとに･･･ まず名前、読み仮名 生没年の類。先頭から32データで16人分だけ取得する。これが歴史姫データ
+		for (int ielem = 0; ielem < (int)ivSplittedDataSize && ielem < 32; ielem++) {
+			if (ielem % 2 == 0) { iRetsudenNo++; }
 
-				// 偶数が読み仮名とか
-				if (ielem % 2 == 0) {
+			if (iRetsudenNo < 0) { iRetsudenNo = 0; }; // 最悪のための番兵
 
-					int datasize = vSplittedData[ielem].size();
-					if (datasize > 0) {
+			// 偶数が読み仮名とか
+			if (ielem % 2 == 0) {
 
-						char* bytedata = new char[datasize + 1];
-						memcpy(bytedata, &vSplittedData[ielem][0], datasize);
-						bytedata[datasize] = NULL; // 番兵
+				int datasize = vSplittedData[ielem].size();
+				if (datasize > 0) {
 
-						NameAssignManagedData(bytedata); // マネージドデータへと代入
+					char* bytedata = new char[datasize + 1];
+					memcpy(bytedata, &vSplittedData[ielem][0], datasize);
+					bytedata[datasize] = NULL; // 番兵
 
-						delete bytedata;
-					}
+					NameAssignManagedData(bytedata); // マネージドデータへと代入
 
-
-					// 奇数は列伝。
+					delete bytedata;
 				}
-				else {
 
-					string szBufCurrent;
 
-					int datasize = vSplittedData[ielem].size();
-					if (datasize > 0) {
+				// 奇数は列伝。
+			}
+			else {
 
-						char* bytedata = new char[datasize + 1];
-						memcpy(bytedata, &vSplittedData[ielem][0], datasize);
-						bytedata[datasize] = NULL; // 番兵
-						szBufCurrent = string(bytedata);
+				string szBufCurrent;
 
-						String^ strRetsuden = RetsudenAssignManagedData(bytedata); // マネージドデータへと代入
-						lstStrRetsuden->Add(strRetsuden);
+				int datasize = vSplittedData[ielem].size();
+				if (datasize > 0) {
 
-						delete bytedata;
-					}
+					char* bytedata = new char[datasize + 1];
+					memcpy(bytedata, &vSplittedData[ielem][0], datasize);
+					bytedata[datasize] = NULL; // 番兵
+					szBufCurrent = string(bytedata);
 
+					String^ strRetsuden = RetsudenAssignManagedData(bytedata); // マネージドデータへと代入
+					lstStrRetsuden->Add(strRetsuden);
+
+					delete bytedata;
 				}
+
 			}
 		}
 
@@ -318,19 +325,19 @@ public:
 	BOOL AllSaveToBFileN6P() {
 
 		// 武将列伝の長さを満たしていなければ、ダメ
-		if (vBufHimeDecodedData.size() < 29) {
+		if (vBufHimeDecodedData.size() < iHimeIndexEnd) {
 			return FALSE;
 		}
 
 		// 武将列伝が入っている所をクリア。
-		vBufHimeDecodedData[29].clear();
+		vBufHimeDecodedData[iHimeIndexBgn].clear();
 
-		int iFileCnt = 1; // 仮想ファイル(メモリ上)を作るカウント数。１つあたり50個なので。
+		int iFileCnt = 1; // 29番目だけなのでファイルは１つだけ
 
 		// それぞれの武将番号の開始番号を送りながら、仮想ファイルファイル分繰り返す。vBufHimeDecodedData に付け加えられてゆく。
 		// 2番目～15番目が武将列伝 注意!!
 		for (int f = 0; f < iFileCnt; f++) {
-			MakeSplittedDataToJoindData(f * 50, 29 + f);
+			MakeSplittedDataToJoindData(f * 50, iHimeIndexBgn + f);
 		}
 
 		// メモリ→パック化イメージ
@@ -357,8 +364,13 @@ public:
 			vSplittedData.push_back(GetRetsudenLineData(i));
 		}
 
+		// 上書き
+		for (int i = 0; i < (int)vSplittedData.size() && i < (int)vBufHimeSplittedData.size(); i++) {
+			vBufHimeSplittedData[i] = vSplittedData[i];
+		}
+
 		// 分解したものを元へと戻す。→１ファイル相当が完成
-		ls11_JoinData(vSplittedData, &vDstJoinedData);
+		ls11_JoinData(vBufHimeSplittedData, &vDstJoinedData);
 
 		// それを全体データに加える。
 		vBufHimeDecodedData[iAssingIndex] = vDstJoinedData;

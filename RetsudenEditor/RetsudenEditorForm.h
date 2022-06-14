@@ -373,7 +373,7 @@ private:
 
 		ofdBushouImport->InitialDirectory = "."; // ツールと同じディレクトリがデフォルト
 
-		ofdBushouImport->Filter = "天翔記武将列伝ファイル(*.n6b)|*.n6b";
+		ofdBushouImport->Filter = "将星録 メッセージファイル(*.nb7)|*.nb7";
 
 		ofdBushouImport->FilterIndex = 1;
 
@@ -610,7 +610,7 @@ private:
 
 		tpHime = gcnew TabPage();
 
-		tpHime->Text = "武将列伝";
+		tpHime->Text = "姫列伝";
 		tpHime->Size = tcRE->ClientSize;
 
 		// 武将検索
@@ -867,7 +867,7 @@ private:
 
 		ofdHimeImport->InitialDirectory = "."; // ツールと同じディレクトリがデフォルト
 
-		ofdHimeImport->Filter = "天翔記武将列伝ファイル(*.n6b)|*.n6b";
+		ofdHimeImport->Filter = "将星録 メッセージファイル(*.nb7)|*.nb7";
 
 		ofdHimeImport->FilterIndex = 1;
 
