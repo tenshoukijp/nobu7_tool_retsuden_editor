@@ -53,8 +53,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,9,5,3
- PRODUCTVERSION 0,9,5,3
+ FILEVERSION 0,9,6,1
+ PRODUCTVERSION 0,9,6,1
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -70,12 +70,12 @@ BEGIN
         BLOCK "041104b0"
         BEGIN
             VALUE "FileDescription", "将星録 列伝エディタ ツール"
-            VALUE "FileVersion", "0.9.5.3"
+            VALUE "FileVersion", "0.9.6.1"
             VALUE "InternalName", "RetsudenEditor"
             VALUE "LegalCopyright", "Copyright (C) 2016-2022 天翔記.jp"
             VALUE "OriginalFilename", "RetsudenEditor.exe"
             VALUE "ProductName", "将星録 列伝エディタ ツール"
-            VALUE "ProductVersion", "0.9.5.3"
+            VALUE "ProductVersion", "0.9.6.1"
         END
     END
     BLOCK "VarFileInfo"
