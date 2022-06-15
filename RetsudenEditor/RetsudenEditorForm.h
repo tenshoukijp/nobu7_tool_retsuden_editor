@@ -153,8 +153,8 @@ private:
 
 		// ‘S‚Ä•Û‘¶
 		btnBushouAllSave = gcnew Button();
-		btnBushouAllSave->Text = "‘S‚Ä•Û‘¶";
-		btnBushouAllSave->Width = 70;
+		btnBushouAllSave->Text = "•«—ñ“`‚ð•Û‘¶";
+		btnBushouAllSave->Width = 120;
 		btnBushouAllSave->Height = tbBushouSearch->Height;
 		btnBushouAllSave->Left = tpBushou->Right - (btnBushouAllSave->Width+20);
 		btnBushouAllSave->Top = tbBushouSearch->Top;
@@ -646,8 +646,8 @@ private:
 
 		// ‘S‚Ä•Û‘¶
 		btnHimeAllSave = gcnew Button();
-		btnHimeAllSave->Text = "‘S‚Ä•Û‘¶";
-		btnHimeAllSave->Width = 70;
+		btnHimeAllSave->Text = "•P—ñ“`‚ð•Û‘¶";
+		btnHimeAllSave->Width = 120;
 		btnHimeAllSave->Height = tbHimeSearch->Height;
 		btnHimeAllSave->Left = tpHime->Right - (btnHimeAllSave->Width + 20);
 		btnHimeAllSave->Top = tbHimeSearch->Top;
@@ -1142,8 +1142,8 @@ private:
 
 		// ‘S‚Ä•Û‘¶
 		btnKahouAllSave = gcnew Button();
-		btnKahouAllSave->Text = "‘S‚Ä•Û‘¶";
-		btnKahouAllSave->Width = 70;
+		btnKahouAllSave->Text = "‰Æ•ó—ñ“`‚ð•Û‘¶";
+		btnKahouAllSave->Width = 120;
 		btnKahouAllSave->Height = tbKahouSearch->Height;
 		btnKahouAllSave->Left = tpKahou->Right - (btnKahouAllSave->Width+20);
 		btnKahouAllSave->Top = tbKahouSearch->Top;
@@ -1561,8 +1561,8 @@ private:
 
 		// ‘S‚Ä•Û‘¶
 		btnCastleAllSave = gcnew Button();
-		btnCastleAllSave->Text = "‘S‚Ä•Û‘¶";
-		btnCastleAllSave->Width = 70;
+		btnCastleAllSave->Text = "é—ñ“`‚ð•Û‘¶";
+		btnCastleAllSave->Width = 120;
 		btnCastleAllSave->Height = tbCastleSearch->Height;
 		btnCastleAllSave->Left = tpCastle->Right - (btnCastleAllSave->Width + 20);
 		btnCastleAllSave->Top = tbCastleSearch->Top;
@@ -1982,8 +1982,8 @@ private:
 
 		// ‘S‚Ä•Û‘¶
 		btnKanniAllSave = gcnew Button();
-		btnKanniAllSave->Text = "‘S‚Ä•Û‘¶";
-		btnKanniAllSave->Width = 70;
+		btnKanniAllSave->Text = "Š¯ˆÊ—ñ“`‚ð•Û‘¶";
+		btnKanniAllSave->Width = 120;
 		btnKanniAllSave->Height = tbKanniSearch->Height;
 		btnKanniAllSave->Left = tpKanni->Right - (btnKanniAllSave->Width + 20);
 		btnKanniAllSave->Top = tbKanniSearch->Top;

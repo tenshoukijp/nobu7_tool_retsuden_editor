@@ -102,6 +102,9 @@
     <ClInclude Include="KanniData.h">
       <Filter>アプリ本体</Filter>
     </ClInclude>
+    <ClInclude Include="UpdateData.h">
+      <Filter>アプリ本体</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

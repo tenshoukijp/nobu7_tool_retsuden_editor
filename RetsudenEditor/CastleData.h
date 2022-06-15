@@ -9,6 +9,7 @@
 #include "ls11_mod.h"
 #include "DotNetTestToMultiByte.h"
 
+#include "UpdateData.h"
 
 using namespace System;
 using namespace System::Text;
@@ -325,8 +326,11 @@ public:
 		// 分解したものを元へと戻す。→１ファイル相当が完成
 		ls11_JoinData(vSplittedData, &vDstJoinedData);
 
-		// それを全体データに加える。
+		// それを全体データに反映。
 		vBufCastleDecodedData[iAssingIndex] = vDstJoinedData;
+
+		// 他のカテゴリのデータ配列に反映
+		UpdateDecodedData(vDstJoinedData, iAssingIndex);
 	}
 
 	// とある１人分の城の名前生年系のデータ

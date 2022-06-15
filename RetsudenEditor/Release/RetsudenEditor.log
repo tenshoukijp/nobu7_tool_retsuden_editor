@@ -19,6 +19,5 @@ g:\repogitory_jp\nobu7_tool_retsuden_editor\retsudeneditor\native\ls11_splitdata
           [
               _Ty=WORD
           ]
-g:\repogitory_jp\nobu7_tool_retsuden_editor\retsudeneditor\himedata.h(366): warning C4018: '<': signed と unsigned の数値を比較しようとしました。 (ソース ファイルをコンパイルしています main.cpp)
   .NETFramework,Version=v4.7.2.AssemblyAttributes.cpp
   RetsudenEditor.vcxproj -> G:\repogitory_jp\nobu7_tool_retsuden_editor\Release\RetsudenEditor.exe

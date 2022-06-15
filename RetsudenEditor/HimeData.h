@@ -9,6 +9,8 @@
 #include "ls11_mod.h"
 #include "DotNetTestToMultiByte.h"
 
+#include "UpdateData.h"
+
 const int iHimeIndexBgn = 29;
 const int iHimeIndexEnd = 29;
 
@@ -372,8 +374,11 @@ public:
 		// 分解したものを元へと戻す。→１ファイル相当が完成
 		ls11_JoinData(vBufHimeSplittedData, &vDstJoinedData);
 
-		// それを全体データに加える。
+		// それを全体データに反映。
 		vBufHimeDecodedData[iAssingIndex] = vDstJoinedData;
+
+		// 他のカテゴリのデータ配列に反映
+		UpdateDecodedData(vDstJoinedData, iAssingIndex);
 	}
 
 	// とある１人分の武将の名前生年系のデータ
