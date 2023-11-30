@@ -12,13 +12,19 @@
 
 #include "DotNetTestToMultiByte.h"
 
+using namespace System;
+using namespace Microsoft::Win32;
+using namespace System::Drawing;
+using namespace System::Windows::Forms;
+
 ref class RetsudenEditorForm : public Form {
 
 //-----------------------------------------------フォームウィンドウ系
 
 	TabControl^ tcRE;	// 全体で１つになってるタブコントロール。TabPage型を追加してく
 
-	static cli::array<String^>^ aryStrFontCandidate = {"天翔 明朝", "天翔 PC98", "天翔 さざ波", "天翔 八丁堀", "ＭＳ 明朝", "ＭＳ ゴシック" }; // フォントリスト
+	static System::Drawing::Text::PrivateFontCollection^ pfc;
+	static cli::array<String^>^ aryStrFontCandidate = {"将星 明朝", "ＭＳ 明朝", "ＭＳ ゴシック" }; // フォントリスト
 
 public:
 	RetsudenEditorForm() {
@@ -27,9 +33,42 @@ public:
 		this->Width = 530;
 		this->Height = 360;
 
+		LoadPrivateFont();
+
 		SetFormIcon();
 
 		SetTabControl();
+	}
+
+	void LoadPrivateFont() {
+		// システムではなく、プライベートフォントとして、ユーザー専用としてインストールしたフォントを検索する
+		pfc = gcnew System::Drawing::Text::PrivateFontCollection();
+		RegistryKey^ key = nullptr;
+
+		// 比較対象のフォント。
+		try
+		{
+			key = Registry::CurrentUser->OpenSubKey(R"(Software\Microsoft\Windows NT\CurrentVersion\Fonts)");
+			cli::array<String^>^ valueNames = key == nullptr ? nullptr : key->GetValueNames();
+			if (valueNames != nullptr)
+			{
+				for each (String ^ valueName in valueNames)
+				{
+					String^ path = key->GetValue(valueName)->ToString();
+					pfc->AddFontFile(path);
+				}
+			}
+		}
+		catch (Exception^ /*ex1*/) {
+
+		}
+		finally
+		{
+			if (key != nullptr) {
+				key->Close();
+			}
+		}
+
 	}
 
 	void SetFormIcon() {
