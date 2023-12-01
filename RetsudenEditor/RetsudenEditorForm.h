@@ -52,10 +52,14 @@ public:
 			cli::array<String^>^ valueNames = key == nullptr ? nullptr : key->GetValueNames();
 			if (valueNames != nullptr)
 			{
+				String^ targetFontName = "将星 明朝";
 				for each (String ^ valueName in valueNames)
 				{
 					String^ path = key->GetValue(valueName)->ToString();
-					pfc->AddFontFile(path);
+					if (valueName->Contains(targetFontName)) {
+						// フォント名が指定のフォント名を含んでいる場合は、フォントを追加する
+						pfc->AddFontFile(path);
+					}
 				}
 			}
 		}
